@@ -1,0 +1,9 @@
+format: jb-book
+root: intro
+chapters:
+  - file: notebooks/01_concepts/mlflow_overview
+  - file: notebooks/02_sklearn/sklearn_autolog
+  - file: notebooks/03_pytorch/pytorch_tracking
+  - file: notebooks/04_experiment_management/hyperparam_search
+  - file: notebooks/05_champion_challenger/champion_challenger
+  - file: notebooks/06_deployment/fastapi_serving

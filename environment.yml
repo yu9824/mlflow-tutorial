@@ -1,0 +1,19 @@
+name: mlflow-tutorial
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    - mlflow>=2.8.0
+    - scikit-learn
+    - torch
+    - optuna
+    - fastapi
+    - uvicorn
+    - "jupyter-book>=0.15,<1.0"
+    - "pydantic>=2.0"
+    - numpy
+    - pandas
+    - jupyter
+    - nbformat
