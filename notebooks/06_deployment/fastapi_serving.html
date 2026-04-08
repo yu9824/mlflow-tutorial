@@ -1,0 +1,1018 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>FastAPI による MLflow チャンピオンモデルのサービング &#8212; MLflow Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/06_deployment/fastapi_serving';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="チャンピオン/チャレンジャーモデル管理" href="../05_champion_challenger/champion_challenger.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MLflow Tutorial</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../01_concepts/mlflow_overview.html">MLflow 概要 — 4つのコンポーネント</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_sklearn/sklearn_autolog.html">scikit-learn × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_pytorch/pytorch_tracking.html">PyTorch × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_experiment_management/hyperparam_search.html">ハイパーパラメータ探索と実験比較</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_champion_challenger/champion_challenger.html">チャンピオン/チャレンジャーモデル管理</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">FastAPI による MLflow チャンピオンモデルのサービング</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial/issues/new?title=Issue%20on%20page%20%2Fnotebooks/06_deployment/fastapi_serving.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/notebooks/06_deployment/fastapi_serving.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>FastAPI による MLflow チャンピオンモデルのサービング</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">前提条件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">学習目標</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">1. アーキテクチャ概要</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">構成の特徴</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#app-main-py">2. <code class="docutils literal notranslate"><span class="pre">app/main.py</span></code> の構成解説</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydantic">2.1 Pydantic データモデル</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lifespan">2.2 lifespan コンテキストマネージャー</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predict">2.3 <code class="docutils literal notranslate"><span class="pre">/predict</span></code> エンドポイント</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">3. サーバー起動手順</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow-server">ターミナル 1: MLflow Server の起動</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fastapi-app">ターミナル 2: FastAPI App の起動</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">4. ヘルスチェック</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#curl">curl を使った確認</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#swagger-ui">Swagger UI を使った確認</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">5. 推論リクエストの送信</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">5.1 curl を使った推論</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-requests">5.2 Python <code class="docutils literal notranslate"><span class="pre">requests</span></code> を使った推論</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">5.3 複数サンプルの一括推論</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">6. チャンピオンモデルの更新と反映手順</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">手順</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">7. エラー発生時のトラブルシューティング</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">FastAPI App 起動時のエラー</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">接続確認コマンド</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">まとめ</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">習得したこと</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">チュートリアル全体のまとめ</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="fastapi-mlflow">
+<h1>FastAPI による MLflow チャンピオンモデルのサービング<a class="headerlink" href="#fastapi-mlflow" title="Permalink to this heading">#</a></h1>
+<section id="id1">
+<h2>前提条件<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p>このノートブックを進める前に、以下が完了していることを確認してください。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">notebooks/05_champion_challenger/</span></code> のノートブックが完了していること</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IrisClassifier</span></code> モデルが MLflow Model Registry に登録されていること</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアスがモデルの特定バージョンに設定されていること</p></li>
+</ul>
+<blockquote>
+<div><p><strong>注意</strong>: このノートブックには実行可能なコードセルがありません。<br />
+FastAPI サーバーは別プロセスで起動する必要があるため、すべてのコマンドは<br />
+ターミナルで直接実行してください。</p>
+</div></blockquote>
+</section>
+<section id="id2">
+<h2>学習目標<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>このノートブックでは以下を学習します。</p>
+<ol class="arabic simple">
+<li><p>MLflow の <code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアスを利用した FastAPI アプリの構成</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lifespan</span></code> コンテキストマネージャーによる起動時モデルロード</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/health</span></code> エンドポイントと <code class="docutils literal notranslate"><span class="pre">/predict</span></code> エンドポイントの動作</p></li>
+<li><p>MLflow Server と FastAPI App の 2 サーバー構成の起動方法</p></li>
+<li><p>チャンピオンモデル更新後のアプリ再起動による反映手順</p></li>
+</ol>
+</section>
+<section id="id3">
+<h2>1. アーキテクチャ概要<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>このチュートリアルでは、ローカル環境に 2 つのサーバーを起動して MLflow モデルをサービングします。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────┐
+│                      ローカル環境                             │
+│                                                             │
+│  ┌──────────────────────────┐      ┌──────────────────────┐ │
+│  │   MLflow Server :5000    │      │  FastAPI App :8000   │ │
+│  │                          │      │                      │ │
+│  │  ・Tracking Server       │ &lt;────│  MLFLOW_TRACKING_URI │ │
+│  │  ・Model Registry        │      │  MODEL_NAME          │ │
+│  │  ・Artifact Store        │      │                      │ │
+│  │    (./mlartifacts)       │      │  GET  /health        │ │
+│  │                          │      │  POST /predict       │ │
+│  └──────────────────────────┘      └──────────┬───────────┘ │
+│                                               │             │
+└───────────────────────────────────────────────┼─────────────┘
+                                                │
+                                           [Client]
+                                    curl / Python requests
+</pre></div>
+</div>
+<section id="id4">
+<h3>構成の特徴<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>項目</p></th>
+<th class="head"><p>内容</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ストレージ</p></td>
+<td><p>ローカルファイルシステムのみ（<code class="docutils literal notranslate"><span class="pre">./mlartifacts</span></code>）</p></td>
+</tr>
+<tr class="row-odd"><td><p>外部接続</p></td>
+<td><p>不要（完全ローカル動作）</p></td>
+</tr>
+<tr class="row-even"><td><p>クラウドストレージ</p></td>
+<td><p>不使用（S3・Azure Blob・GCS 等は不要）</p></td>
+</tr>
+<tr class="row-odd"><td><p>サーバー数</p></td>
+<td><p>2 プロセス（MLflow + FastAPI）</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>MLflow Server はモデルの保存・取得・バージョン管理を担当し、FastAPI App は起動時に<br />
+<code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアスのモデルをロードしてリクエストを受け付けます。</p>
+</section>
+</section>
+<section id="app-main-py">
+<h2>2. <code class="docutils literal notranslate"><span class="pre">app/main.py</span></code> の構成解説<a class="headerlink" href="#app-main-py" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">app/main.py</span></code> はプロジェクトルートの <code class="docutils literal notranslate"><span class="pre">app/</span></code> ディレクトリに配置されています。<br />
+以下にコードの主要部分を示します（実行はしません）。</p>
+<section id="pydantic">
+<h3>2.1 Pydantic データモデル<a class="headerlink" href="#pydantic" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PredictRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>          <span class="c1"># 入力特徴量のリスト</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PredictResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">prediction</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>        <span class="c1"># 予測結果</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>                <span class="c1"># モデル名</span>
+    <span class="n">model_version</span><span class="p">:</span> <span class="nb">str</span>             <span class="c1"># バージョン番号</span>
+    <span class="n">alias</span><span class="p">:</span> <span class="nb">str</span>                     <span class="c1"># 使用したエイリアス（&quot;champion&quot;）</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">HealthResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>                    <span class="c1"># &quot;ok&quot;</span>
+    <span class="n">tracking_uri</span><span class="p">:</span> <span class="nb">str</span>              <span class="c1"># MLflow Tracking URI</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">model_version</span><span class="p">:</span> <span class="nb">str</span>
+</pre></div>
+</div>
+<p>Pydantic v2 を使用しており、リクエスト/レスポンスのバリデーションを自動的に行います。</p>
+</section>
+<section id="lifespan">
+<h3>2.2 lifespan コンテキストマネージャー<a class="headerlink" href="#lifespan" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">asynccontextmanager</span>
+
+<span class="nd">@asynccontextmanager</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">lifespan</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">FastAPI</span><span class="p">):</span>
+    <span class="c1"># --- 起動時処理 ---</span>
+    <span class="n">tracking_uri</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MLFLOW_TRACKING_URI&quot;</span><span class="p">)</span>
+    <span class="n">model_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MODEL_NAME&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 環境変数が未設定の場合は明確なエラーを出力して終了</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tracking_uri</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERROR: MLFLOW_TRACKING_URI environment variable is not set.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="n">tracking_uri</span><span class="p">)</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+
+    <span class="c1"># @champion エイリアスのバージョン情報を取得</span>
+    <span class="n">mv</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_model_version_by_alias</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="s2">&quot;champion&quot;</span><span class="p">)</span>
+
+    <span class="c1"># モデルをロードして app.state に保持</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;models:/</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">@champion&quot;</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">model_version</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">version</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">model_name</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">tracking_uri</span> <span class="o">=</span> <span class="n">tracking_uri</span>
+
+    <span class="k">yield</span>  <span class="c1"># ← ここでアプリがリクエストを受け付ける</span>
+
+    <span class="c1"># --- シャットダウン時処理（必要に応じてクリーンアップ）---</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">lifespan</span></code> は FastAPI の推奨パターンで、アプリ起動時に一度だけモデルをロードします。<br />
+MLflow Server が未起動・モデルが未登録・エイリアス未設定の場合は <code class="docutils literal notranslate"><span class="pre">sys.exit(1)</span></code> で<br />
+明確なエラーメッセージを出力してプロセスを終了します。</p>
+</section>
+<section id="predict">
+<h3>2.3 <code class="docutils literal notranslate"><span class="pre">/predict</span></code> エンドポイント<a class="headerlink" href="#predict" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/predict&quot;</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">PredictResponse</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">req</span><span class="p">:</span> <span class="n">PredictRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PredictResponse</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run inference using the loaded @champion model.&quot;&quot;&quot;</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">model</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">features</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># asyncio.to_thread で同期処理をイベントループをブロックせずに実行</span>
+    <span class="n">prediction</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">,</span> <span class="n">features</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">PredictResponse</span><span class="p">(</span>
+        <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+        <span class="n">model_name</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+        <span class="n">model_version</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">model_version</span><span class="p">,</span>
+        <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;champion&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">mlflow.pyfunc</span></code> の <code class="docutils literal notranslate"><span class="pre">model.predict()</span></code> は同期関数です。<br />
+<code class="docutils literal notranslate"><span class="pre">asyncio.to_thread()</span></code> を使うことで、推論処理中も他のリクエストを受け付けられます。</p>
+</section>
+</section>
+<section id="id5">
+<h2>3. サーバー起動手順<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p>2 つのターミナルを開いて、以下の順番でサーバーを起動します。</p>
+<section id="mlflow-server">
+<h3>ターミナル 1: MLflow Server の起動<a class="headerlink" href="#mlflow-server" title="Permalink to this heading">#</a></h3>
+<p>プロジェクトルートディレクトリで実行します。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>mlflow-tutorial
+
+mlflow<span class="w"> </span>server<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--port<span class="w"> </span><span class="m">5000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--default-artifact-root<span class="w"> </span>./mlartifacts
+</pre></div>
+</div>
+<p>起動に成功すると以下のようなログが表示されます。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">Starting</span> <span class="n">gunicorn</span> <span class="mf">21.</span><span class="n">x</span><span class="o">.</span><span class="n">x</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">Listening</span> <span class="n">at</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">0.0.0.0</span><span class="p">:</span><span class="mi">5000</span>
+</pre></div>
+</div>
+<p>ブラウザで <code class="docutils literal notranslate"><span class="pre">http://localhost:5000</span></code> を開き、MLflow UI が表示されることを確認してください。</p>
+</section>
+<section id="fastapi-app">
+<h3>ターミナル 2: FastAPI App の起動<a class="headerlink" href="#fastapi-app" title="Permalink to this heading">#</a></h3>
+<p>プロジェクトルートディレクトリで実行します。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>mlflow-tutorial
+
+<span class="nv">MLFLOW_TRACKING_URI</span><span class="o">=</span>http://localhost:5000<span class="w"> </span><span class="se">\</span>
+<span class="nv">MODEL_NAME</span><span class="o">=</span>IrisClassifier<span class="w"> </span><span class="se">\</span>
+uvicorn<span class="w"> </span>app.main:app<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+</pre></div>
+</div>
+<p>起動に成功すると以下のようなログが表示されます。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Loaded</span> <span class="n">model</span> <span class="s1">&#39;IrisClassifier&#39;</span> <span class="n">version</span> <span class="mi">2</span> <span class="p">(</span><span class="nd">@champion</span><span class="p">)</span>
+<span class="n">INFO</span><span class="p">:</span>     <span class="n">Uvicorn</span> <span class="n">running</span> <span class="n">on</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">8000</span> <span class="p">(</span><span class="n">Press</span> <span class="n">CTRL</span><span class="o">+</span><span class="n">C</span> <span class="n">to</span> <span class="n">quit</span><span class="p">)</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>環境変数について</strong>:<br />
+<code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI</span></code> は FastAPI App がどの MLflow Server に接続するかを指定します。<br />
+<code class="docutils literal notranslate"><span class="pre">MODEL_NAME</span></code> はロードするモデルの登録名です。<br />
+これらをコマンドのプレフィックスとして設定することで、そのプロセスにのみ適用されます。</p>
+</div></blockquote>
+</section>
+</section>
+<section id="id6">
+<h2>4. ヘルスチェック<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
+<p>FastAPI App が正常に起動したら、<code class="docutils literal notranslate"><span class="pre">/health</span></code> エンドポイントで状態を確認します。</p>
+<section id="curl">
+<h3>curl を使った確認<a class="headerlink" href="#curl" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://localhost:8000/health
+</pre></div>
+</div>
+<p>正常な場合のレスポンス例:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;tracking_uri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:5000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IrisClassifier&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="swagger-ui">
+<h3>Swagger UI を使った確認<a class="headerlink" href="#swagger-ui" title="Permalink to this heading">#</a></h3>
+<p>ブラウザで <code class="docutils literal notranslate"><span class="pre">http://localhost:8000/docs</span></code> を開くと、FastAPI が自動生成した<br />
+インタラクティブな API ドキュメントが表示されます。</p>
+</section>
+</section>
+<section id="id7">
+<h2>5. 推論リクエストの送信<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
+<section id="id8">
+<h3>5.1 curl を使った推論<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h3>
+<p>アイリスデータセットのサンプル（がく片長さ・がく片幅・花びら長さ・花びら幅）で推論します。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/predict<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;features&quot;: [5.1, 3.5, 1.4, 0.2]}&#39;</span>
+</pre></div>
+</div>
+<p>レスポンス例（クラス 0 = Setosa と予測した場合）:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;prediction&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IrisClassifier&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;alias&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;champion&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="python-requests">
+<h3>5.2 Python <code class="docutils literal notranslate"><span class="pre">requests</span></code> を使った推論<a class="headerlink" href="#python-requests" title="Permalink to this heading">#</a></h3>
+<p>Python スクリプトやノートブックから呼び出す場合は以下のようにします。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:8000/predict&quot;</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">5.1</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]}</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;予測クラス: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;prediction&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;モデル: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> v</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;model_version&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (@</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;alias&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>出力例:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">予測クラス</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
+<span class="n">モデル</span><span class="p">:</span> <span class="n">IrisClassifier</span> <span class="n">v2</span> <span class="p">(</span><span class="nd">@champion</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id9">
+<h3>5.3 複数サンプルの一括推論<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h3>
+<p>現在の実装は 1 サンプルずつ処理します。複数サンプルを処理するには、<br />
+ループでリクエストを送信するか、バッチ対応のエンドポイントに拡張してください。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">5.1</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>  <span class="c1"># Setosa</span>
+    <span class="p">[</span><span class="mf">6.3</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">,</span> <span class="mf">4.7</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">],</span>  <span class="c1"># Versicolor</span>
+    <span class="p">[</span><span class="mf">6.3</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">,</span> <span class="mf">5.1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span>  <span class="c1"># Virginica</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">features</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="n">features</span><span class="p">})</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;入力: </span><span class="si">{</span><span class="n">features</span><span class="si">}</span><span class="s2"> → 予測: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;prediction&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id10">
+<h2>6. チャンピオンモデルの更新と反映手順<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h2>
+<p>新しいモデルを学習・評価して <code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアスを更新した後、<br />
+FastAPI App を再起動することで新しいチャンピオンモデルが反映されます。</p>
+<section id="id11">
+<h3>手順<a class="headerlink" href="#id11" title="Permalink to this heading">#</a></h3>
+<p><strong>ステップ 1: 新しいモデルバージョンを Model Registry に登録する</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># notebooks/05_champion_challenger/ で実施</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mlflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">MlflowClient</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+
+<span class="c1"># 新バージョンに @champion エイリアスを付与</span>
+<span class="n">client</span><span class="o">.</span><span class="n">set_registered_model_alias</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;IrisClassifier&quot;</span><span class="p">,</span>
+    <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;champion&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="p">,</span>  <span class="c1"># 新しいバージョン番号</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;@champion エイリアスをバージョン 3 に更新しました&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>ステップ 2: FastAPI App を再起動する</strong></p>
+<p>ターミナル 2 で <code class="docutils literal notranslate"><span class="pre">Ctrl+C</span></code> で停止してから再起動します。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ctrl+C で停止した後</span>
+<span class="nv">MLFLOW_TRACKING_URI</span><span class="o">=</span>http://localhost:5000<span class="w"> </span><span class="se">\</span>
+<span class="nv">MODEL_NAME</span><span class="o">=</span>IrisClassifier<span class="w"> </span><span class="se">\</span>
+uvicorn<span class="w"> </span>app.main:app<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+</pre></div>
+</div>
+<p>再起動ログで新バージョンがロードされたことを確認します。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Loaded</span> <span class="n">model</span> <span class="s1">&#39;IrisClassifier&#39;</span> <span class="n">version</span> <span class="mi">3</span> <span class="p">(</span><span class="nd">@champion</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>ステップ 3: ヘルスチェックで確認する</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://localhost:8000/health
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;tracking_uri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:5000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IrisClassifier&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;3&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>ロールバックについて</strong>:<br />
+新バージョンに問題があった場合は、<code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアスを旧バージョンに<br />
+戻してから FastAPI App を再起動するだけでロールバックできます。<br />
+エイリアスを使った管理の利点は、モデルのバージョン番号を変更するだけで<br />
+アプリの設定ファイルを変更せずにデプロイできる点です。</p>
+</div></blockquote>
+</section>
+</section>
+<section id="id12">
+<h2>7. エラー発生時のトラブルシューティング<a class="headerlink" href="#id12" title="Permalink to this heading">#</a></h2>
+<section id="id13">
+<h3>FastAPI App 起動時のエラー<a class="headerlink" href="#id13" title="Permalink to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>エラーメッセージ</p></th>
+<th class="head"><p>原因</p></th>
+<th class="head"><p>対処法</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI</span> <span class="pre">environment</span> <span class="pre">variable</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">set</span></code></p></td>
+<td><p>環境変数未設定</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI=http://localhost:5000</span></code> を付けて起動</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MODEL_NAME</span> <span class="pre">environment</span> <span class="pre">variable</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">set</span></code></p></td>
+<td><p>環境変数未設定</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MODEL_NAME=IrisClassifier</span></code> を付けて起動</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Failed</span> <span class="pre">to</span> <span class="pre">get</span> <span class="pre">&#64;champion</span> <span class="pre">alias</span></code></p></td>
+<td><p>MLflow Server 未起動 または エイリアス未設定</p></td>
+<td><p>MLflow Server を起動し、<code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアスを設定</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Failed</span> <span class="pre">to</span> <span class="pre">load</span> <span class="pre">model</span></code></p></td>
+<td><p>アーティファクトが見つからない</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">./mlartifacts</span></code> ディレクトリがプロジェクトルートに存在するか確認</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id14">
+<h3>接続確認コマンド<a class="headerlink" href="#id14" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># MLflow Server の動作確認</span>
+curl<span class="w"> </span>http://localhost:5000/health
+
+<span class="c1"># @champion エイリアスの確認</span>
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<span class="s2">import mlflow</span>
+<span class="s2">from mlflow import MlflowClient</span>
+<span class="s2">mlflow.set_tracking_uri(&#39;http://localhost:5000&#39;)</span>
+<span class="s2">client = MlflowClient()</span>
+<span class="s2">mv = client.get_model_version_by_alias(&#39;IrisClassifier&#39;, &#39;champion&#39;)</span>
+<span class="s2">print(f&#39;@champion → version {mv.version}&#39;)</span>
+<span class="s2">&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id15">
+<h2>まとめ<a class="headerlink" href="#id15" title="Permalink to this heading">#</a></h2>
+<p>このノートブックでは、MLflow Model Registry と FastAPI を組み合わせた<br />
+ローカル 2 サーバー構成のサービングパイプラインを学習しました。</p>
+<section id="id16">
+<h3>習得したこと<a class="headerlink" href="#id16" title="Permalink to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>項目</p></th>
+<th class="head"><p>内容</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>アーキテクチャ</p></td>
+<td><p>MLflow Server + FastAPI の 2 プロセス構成</p></td>
+</tr>
+<tr class="row-odd"><td><p>モデルロード</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lifespan</span></code> による起動時の <code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> モデル自動ロード</p></td>
+</tr>
+<tr class="row-even"><td><p>エンドポイント</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/health</span></code>（状態確認）・<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/predict</span></code>（推論）</p></td>
+</tr>
+<tr class="row-odd"><td><p>非同期処理</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">asyncio.to_thread()</span></code> による同期推論のノンブロッキング実行</p></td>
+</tr>
+<tr class="row-even"><td><p>モデル更新</p></td>
+<td><p>エイリアス更新 → アプリ再起動の簡単な反映手順</p></td>
+</tr>
+<tr class="row-odd"><td><p>ローカル完結</p></td>
+<td><p>外部インターネット・クラウドストレージ不要</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id17">
+<h3>チュートリアル全体のまとめ<a class="headerlink" href="#id17" title="Permalink to this heading">#</a></h3>
+<p>これで MLflow チュートリアルのすべてのセクションが完了しました。</p>
+<ol class="arabic simple">
+<li><p><strong>MLflow コア概念</strong> — Tracking・Models・Model Registry・Projects</p></li>
+<li><p><strong>scikit-learn 連携</strong> — autolog・手動ロギング・Model Registry 登録</p></li>
+<li><p><strong>PyTorch 連携</strong> — エポックごとのメトリクスロギング・モデル保存</p></li>
+<li><p><strong>Optuna HPO</strong> — ハイパーパラメータ最適化と MLflow の統合</p></li>
+<li><p><strong>チャンピオン/チャレンジャー管理</strong> — エイリアス API による運用管理</p></li>
+<li><p><strong>FastAPI サービング</strong> — 本番運用を想定した推論 API の構築</p></li>
+</ol>
+<p>MLflow を活用した機械学習の実験管理からモデルサービングまでの<br />
+一連のワークフローを体験できました。実際のプロジェクトでは、<br />
+このローカル構成をベースに必要に応じてクラウド環境へ移行することができます。</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/06_deployment"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../05_champion_challenger/champion_challenger.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">チャンピオン/チャレンジャーモデル管理</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">前提条件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">学習目標</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">1. アーキテクチャ概要</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">構成の特徴</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#app-main-py">2. <code class="docutils literal notranslate"><span class="pre">app/main.py</span></code> の構成解説</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydantic">2.1 Pydantic データモデル</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lifespan">2.2 lifespan コンテキストマネージャー</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predict">2.3 <code class="docutils literal notranslate"><span class="pre">/predict</span></code> エンドポイント</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">3. サーバー起動手順</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow-server">ターミナル 1: MLflow Server の起動</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fastapi-app">ターミナル 2: FastAPI App の起動</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">4. ヘルスチェック</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#curl">curl を使った確認</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#swagger-ui">Swagger UI を使った確認</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">5. 推論リクエストの送信</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">5.1 curl を使った推論</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-requests">5.2 Python <code class="docutils literal notranslate"><span class="pre">requests</span></code> を使った推論</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">5.3 複数サンプルの一括推論</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">6. チャンピオンモデルの更新と反映手順</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">手順</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">7. エラー発生時のトラブルシューティング</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">FastAPI App 起動時のエラー</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">接続確認コマンド</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">まとめ</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">習得したこと</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">チュートリアル全体のまとめ</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

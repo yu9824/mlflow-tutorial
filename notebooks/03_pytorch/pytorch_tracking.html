@@ -1,0 +1,978 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>PyTorch × MLflow チュートリアル &#8212; MLflow Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/03_pytorch/pytorch_tracking';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="ハイパーパラメータ探索と実験比較" href="../04_experiment_management/hyperparam_search.html" />
+    <link rel="prev" title="scikit-learn × MLflow チュートリアル" href="../02_sklearn/sklearn_autolog.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MLflow Tutorial</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../01_concepts/mlflow_overview.html">MLflow 概要 — 4つのコンポーネント</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_sklearn/sklearn_autolog.html">scikit-learn × MLflow チュートリアル</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">PyTorch × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_experiment_management/hyperparam_search.html">ハイパーパラメータ探索と実験比較</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_champion_challenger/champion_challenger.html">チャンピオン/チャレンジャーモデル管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_deployment/fastapi_serving.html">FastAPI による MLflow チャンピオンモデルのサービング</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial/issues/new?title=Issue%20on%20page%20%2Fnotebooks/03_pytorch/pytorch_tracking.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/notebooks/03_pytorch/pytorch_tracking.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>PyTorch × MLflow チュートリアル</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">前提条件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">学習目標</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sklearn">sklearn との共通概念の比較</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">環境セットアップ</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">データ準備</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-4-1">Task 4.1: トレーニングループとエポックごとのメトリクスロギング</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">モデル定義</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow">MLflow によるトレーニングループの記録</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow-ui">MLflow UI で学習曲線を確認</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-4-2-mlflow-pytorch-log-model">Task 4.2: mlflow.pytorch.log_model によるモデル保存とロード</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pytorch-lightning-mlflow-pytorch-autolog">補足: PyTorch Lightning 環境での mlflow.pytorch.autolog()</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">まとめ</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">sklearn サンプルとの共通点</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">次のステップ</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pytorch-mlflow">
+<h1>PyTorch × MLflow チュートリアル<a class="headerlink" href="#pytorch-mlflow" title="Permalink to this heading">#</a></h1>
+<section id="id1">
+<h2>前提条件<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>conda 仮想環境 <code class="docutils literal notranslate"><span class="pre">mlflow-tutorial</span></code> がアクティブであること</p></li>
+<li><p>MLflow &gt;= 2.8.0、PyTorch がインストール済みであること</p></li>
+<li><p>バージョン確認: <code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">--version</span></code> / <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;import</span> <span class="pre">torch;</span> <span class="pre">print(torch.__version__)&quot;</span></code></p></li>
+<li><p>ノートブック <code class="docutils literal notranslate"><span class="pre">01_concepts</span></code> の内容（Experiment / Run / Artifact の概念）を理解していること</p></li>
+<li><p>ノートブック <code class="docutils literal notranslate"><span class="pre">02_sklearn/sklearn_autolog.ipynb</span></code> を先に実行していること（共通概念の比較に使用）</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>学習目標<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>PyTorch の乱数生成による合成データで簡単なニューラルネットワーク（2 層 MLP）を定義・訓練する方法を習得する</p></li>
+<li><p>トレーニングループ内でエポックごとに <code class="docutils literal notranslate"><span class="pre">mlflow.log_metric(key,</span> <span class="pre">value,</span> <span class="pre">step=epoch)</span></code> でメトリクスをロギングする方法を習得する</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.log_model()</span></code> でモデルをアーティファクトとして保存し、後からロードして推論する手順を習得する</p></li>
+<li><p>scikit-learn サンプルとの共通概念（Run / Experiment / Artifact）を比較しながら MLflow の枠組みへの理解を深める</p></li>
+</ol>
+</section>
+<section id="sklearn">
+<h2>sklearn との共通概念の比較<a class="headerlink" href="#sklearn" title="Permalink to this heading">#</a></h2>
+<p>MLflow はフレームワークに依存しない共通の枠組みを提供します。sklearn サンプルで学んだ概念は PyTorch でも同様に使用します。</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>概念</p></th>
+<th class="head"><p>sklearn サンプルでの使い方</p></th>
+<th class="head"><p>PyTorch サンプルでの使い方</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Experiment</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sklearn-iris</span></code> という名前の実験グループ</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pytorch-classification</span></code> という名前の実験グループ</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Run</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">clf.fit()</span></code> の前後を <code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">mlflow.start_run()</span></code> で囲む</p></td>
+<td><p>トレーニングループ全体を <code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">mlflow.start_run()</span></code> で囲む</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Metric</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">accuracy_score</span></code> を <code class="docutils literal notranslate"><span class="pre">log_metric</span></code> で記録</p></td>
+<td><p>エポックごとの <code class="docutils literal notranslate"><span class="pre">loss</span></code> / <code class="docutils literal notranslate"><span class="pre">accuracy</span></code> を <code class="docutils literal notranslate"><span class="pre">step=epoch</span></code> 付きで記録</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Artifact</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.log_model()</span></code> でモデルを保存</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.log_model()</span></code> でモデルを保存</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Param</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n_estimators</span></code>, <code class="docutils literal notranslate"><span class="pre">max_depth</span></code> など</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hidden_dim</span></code>, <code class="docutils literal notranslate"><span class="pre">lr</span></code>, <code class="docutils literal notranslate"><span class="pre">n_epochs</span></code> など</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>ポイント:</strong> <code class="docutils literal notranslate"><span class="pre">mlflow.log_metric(key,</span> <span class="pre">value,</span> <span class="pre">step=epoch)</span></code> の <code class="docutils literal notranslate"><span class="pre">step</span></code> 引数を使うと、MLflow UI でメトリクスの時系列変化をグラフ表示できます。これは sklearn のような単一評価では使わない PyTorch 固有の活用方法です。</p>
+</section>
+<section id="id3">
+<h2>環境セットアップ<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>必要なライブラリをインポートし、再現性のためシードを固定します。<br />
+<code class="docutils literal notranslate"><span class="pre">torch.manual_seed(42)</span></code> は PyTorch の乱数シードを固定し、モデルの初期重みやデータ生成を再現可能にします。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mlflow</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mlflow.pytorch</span>
+
+<span class="c1"># 再現性のためシードを固定（最初のコードセルで必ず設定）</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Phase 1: ローカルファイルシステムを Tracking URI として使用</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="s2">&quot;./mlruns&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MLflow version: </span><span class="si">{</span><span class="n">mlflow</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PyTorch version: </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tracking URI: </span><span class="si">{</span><span class="n">mlflow</span><span class="o">.</span><span class="n">get_tracking_uri</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MLflow version: 2.11.3
+PyTorch version: 2.2.1
+Tracking URI: ./mlruns
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id4">
+<h2>データ準備<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>外部データセットのダウンロードは不要です。<code class="docutils literal notranslate"><span class="pre">torch.randn</span></code> と <code class="docutils literal notranslate"><span class="pre">torch.randint</span></code> で合成分類データを生成します。<br />
+これにより、ネットワーク接続のないオフライン環境でもチュートリアルを実行できます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 合成分類データの生成（外部ダウンロード不要）</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">n_classes</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="p">(</span><span class="n">n_samples</span><span class="p">,))</span>
+
+<span class="c1"># 訓練 / テスト分割（80:20）</span>
+<span class="n">train_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">n_samples</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="n">train_size</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">train_size</span><span class="p">:]</span>
+<span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="n">train_size</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">train_size</span><span class="p">:]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;データセット形状: X=</span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">, y=</span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;クラス数: </span><span class="si">{</span><span class="n">n_classes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;訓練データ: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="si">}</span><span class="s2">サンプル, テストデータ: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="si">}</span><span class="s2">サンプル&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;X_train shape: </span><span class="si">{</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, dtype: </span><span class="si">{</span><span class="n">X_train</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y_train shape: </span><span class="si">{</span><span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, dtype: </span><span class="si">{</span><span class="n">y_train</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>データセット形状: X=(500, 10), y=(500,)
+クラス数: 3
+訓練データ: 400サンプル, テストデータ: 100サンプル
+X_train shape: torch.Size([400, 10]), dtype: torch.float32
+y_train shape: torch.Size([400]), dtype: torch.int64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="task-4-1">
+<h2>Task 4.1: トレーニングループとエポックごとのメトリクスロギング<a class="headerlink" href="#task-4-1" title="Permalink to this heading">#</a></h2>
+<section id="id5">
+<h3>モデル定義<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<p>2 層の全結合ネットワーク（MLP: Multi-Layer Perceptron）を定義します。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>入力 (n_features=10) → Linear(10→32) → ReLU → Linear(32→3) → 出力 (n_classes=3)
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SimpleNet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;2層全結合ニューラルネットワーク（MLP）&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+
+
+<span class="c1"># モデルのインスタンス化</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SimpleNet</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;パラメータ数: </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SimpleNet(
+  (fc1): Linear(in_features=10, out_features=32, bias=True)
+  (relu): ReLU()
+  (fc2): Linear(in_features=32, out_features=3, bias=True)
+)
+パラメータ数: 387
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="mlflow">
+<h3>MLflow によるトレーニングループの記録<a class="headerlink" href="#mlflow" title="Permalink to this heading">#</a></h3>
+<p>エポックごとに <code class="docutils literal notranslate"><span class="pre">mlflow.log_metric(key,</span> <span class="pre">value,</span> <span class="pre">step=epoch)</span></code> を呼び出すことで、学習曲線を MLflow に記録します。<br />
+記録したメトリクスは MLflow UI の「Metrics」タブでグラフとして確認できます。</p>
+<p><strong>sklearn との比較:</strong><br />
+sklearn では <code class="docutils literal notranslate"><span class="pre">clf.fit()</span></code> の 1 回で学習が完了するため <code class="docutils literal notranslate"><span class="pre">step</span></code> は使いませんでしたが、<br />
+PyTorch では各エポックの進捗を <code class="docutils literal notranslate"><span class="pre">step=epoch</span></code> で追跡することで、過学習や収束の様子を可視化できます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Experiment の設定</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">set_experiment</span><span class="p">(</span><span class="s2">&quot;pytorch-classification&quot;</span><span class="p">)</span>
+
+<span class="c1"># ハイパーパラメータ</span>
+<span class="n">hidden_dim</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="c1"># モデル・損失関数・オプティマイザの初期化</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SimpleNet</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
+<span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="s2">&quot;pytorch_simple_net&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">run</span><span class="p">:</span>
+    <span class="c1"># パラメータを一括記録</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_params</span><span class="p">({</span>
+        <span class="s2">&quot;n_features&quot;</span><span class="p">:</span> <span class="n">n_features</span><span class="p">,</span>
+        <span class="s2">&quot;hidden_dim&quot;</span><span class="p">:</span> <span class="n">hidden_dim</span><span class="p">,</span>
+        <span class="s2">&quot;n_classes&quot;</span><span class="p">:</span> <span class="n">n_classes</span><span class="p">,</span>
+        <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="n">lr</span><span class="p">,</span>
+        <span class="s2">&quot;n_epochs&quot;</span><span class="p">:</span> <span class="n">n_epochs</span><span class="p">,</span>
+    <span class="p">})</span>
+
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+        <span class="c1"># --- 訓練フェーズ ---</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="c1"># --- 評価フェーズ ---</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">test_logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+            <span class="n">test_loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">test_logits</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="n">test_logits</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="p">(</span><span class="n">preds</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="c1"># エポックごとにメトリクスを記録（step=epoch でグラフ化可能）</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">step</span><span class="o">=</span><span class="n">epoch</span><span class="p">)</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;test_loss&quot;</span><span class="p">,</span> <span class="n">test_loss</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">epoch</span><span class="p">)</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;test_accuracy&quot;</span><span class="p">,</span> <span class="n">acc</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">epoch</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2">: loss=</span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, test_acc=</span><span class="si">{</span><span class="n">acc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># モデルをアーティファクトとして保存（Task 4.2）</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">pytorch</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run ID: </span><span class="si">{</span><span class="n">run</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024/03/15 10:30:00 INFO mlflow.tracking.fluent: Experiment with name &#39;pytorch-classification&#39; does not exist. Creating a new experiment.
+ Epoch  5/20: loss=1.0654, test_acc=0.3700
+ Epoch 10/20: loss=1.0201, test_acc=0.3800
+ Epoch 15/20: loss=0.9823, test_acc=0.3900
+ Epoch 20/20: loss=0.9507, test_acc=0.4100
+Run ID: b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="mlflow-ui">
+<h3>MLflow UI で学習曲線を確認<a class="headerlink" href="#mlflow-ui" title="Permalink to this heading">#</a></h3>
+<p>ターミナルで <code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">ui</span></code> を実行し、ブラウザで <code class="docutils literal notranslate"><span class="pre">http://localhost:5000</span></code> を開くと、
+記録した <code class="docutils literal notranslate"><span class="pre">train_loss</span></code> / <code class="docutils literal notranslate"><span class="pre">test_loss</span></code> / <code class="docutils literal notranslate"><span class="pre">test_accuracy</span></code> の時系列グラフを確認できます。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># ターミナルで実行（このノートブックとは別のターミナル）</span>
+mlflow<span class="w"> </span>ui
+</pre></div>
+</div>
+<p>UI の操作手順:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pytorch-classification</span></code> Experiment を選択</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pytorch_simple_net</span></code> Run をクリック</p></li>
+<li><p>「Metrics」タブ → <code class="docutils literal notranslate"><span class="pre">train_loss</span></code> などをクリックしてグラフを表示</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="task-4-2-mlflow-pytorch-log-model">
+<h2>Task 4.2: mlflow.pytorch.log_model によるモデル保存とロード<a class="headerlink" href="#task-4-2-mlflow-pytorch-log-model" title="Permalink to this heading">#</a></h2>
+<p>前のセルですでに <code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.log_model(model,</span> <span class="pre">&quot;model&quot;)</span></code> でモデルを保存しました。<br />
+ここでは、保存したモデルを <code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.load_model()</span></code> でロードして推論を行います。</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>API</p></th>
+<th class="head"><p>動作</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.log_model(model,</span> <span class="pre">artifact_path)</span></code></p></td>
+<td><p>モデルを <code class="docutils literal notranslate"><span class="pre">runs:/&lt;run_id&gt;/&lt;artifact_path&gt;</span></code> に保存</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.load_model(model_uri)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">runs:/</span></code> や <code class="docutils literal notranslate"><span class="pre">models:/</span></code> URI からモデルをロード</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>sklearn との対応:</strong><br />
+sklearn の <code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.log_model()</span></code> / <code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.load_model()</span></code> と同じパターンです。<br />
+フレームワークが変わっても MLflow の API 設計は統一されています。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># runs:/ URI でモデルをロードして推論</span>
+<span class="n">model_uri</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;runs:/</span><span class="si">{</span><span class="n">run</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span><span class="si">}</span><span class="s2">/model&quot;</span>
+<span class="n">loaded_model</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pytorch</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">model_uri</span><span class="p">)</span>
+<span class="n">loaded_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;モデルをロードしました: </span><span class="si">{</span><span class="n">model_uri</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ロードしたモデルの型: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">loaded_model</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">X_test</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">loaded_model</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Predictions: </span><span class="si">{</span><span class="n">preds</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;True labels: </span><span class="si">{</span><span class="n">y_test</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>モデルをロードしました: runs:/b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7/model
+ロードしたモデルの型: &lt;class &#39;__main__.SimpleNet&#39;&gt;
+Predictions: [1 2 0]
+True labels: [2 1 0]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MLflow クライアントで記録内容を確認</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mlflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">MlflowClient</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+
+<span class="n">exp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_experiment_by_name</span><span class="p">(</span><span class="s2">&quot;pytorch-classification&quot;</span><span class="p">)</span>
+<span class="n">runs</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_runs</span><span class="p">(</span><span class="n">experiment_ids</span><span class="o">=</span><span class="p">[</span><span class="n">exp</span><span class="o">.</span><span class="n">experiment_id</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== 記録済み Run の確認 ===&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_name</span><span class="si">}</span><span class="s2"> | ID: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span><span class="si">}</span><span class="s2"> | Status: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 最初の Run の詳細を表示</span>
+<span class="n">latest_run</span> <span class="o">=</span> <span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== パラメータ ===&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">latest_run</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== 最終メトリクス ===&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">latest_run</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== 記録済み Run の確認 ===
+Run: pytorch_simple_net | ID: b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7 | Status: FINISHED
+
+=== パラメータ ===
+  hidden_dim: 32
+  lr: 0.01
+  n_classes: 3
+  n_epochs: 20
+  n_features: 10
+
+=== 最終メトリクス ===
+  test_accuracy: 0.41
+  test_loss: 1.0681
+  train_loss: 0.9507
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="pytorch-lightning-mlflow-pytorch-autolog">
+<h2>補足: PyTorch Lightning 環境での mlflow.pytorch.autolog()<a class="headerlink" href="#pytorch-lightning-mlflow-pytorch-autolog" title="Permalink to this heading">#</a></h2>
+<blockquote>
+<div><p><strong>注意:</strong> 以下は PyTorch Lightning がインストールされている環境向けの補足説明です。<br />
+このチュートリアルでは PyTorch Lightning は使用しません。</p>
+</div></blockquote>
+<p>PyTorch Lightning を使用している場合は、<code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.autolog()</span></code> を呼び出すだけでトレーニングループのメトリクスを自動記録できます。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mlflow</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytorch_lightning</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+
+<span class="c1"># autolog を有効化（PyTorch Lightning 専用）</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">pytorch</span><span class="o">.</span><span class="n">autolog</span><span class="p">()</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataloader</span><span class="p">)</span>
+<span class="c1"># → train_loss / val_loss などが自動的に MLflow に記録される</span>
+</pre></div>
+</div>
+<p>あるいは、Lightning の <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> に <code class="docutils literal notranslate"><span class="pre">MLflowLogger</span></code> を渡す方法もあります:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pytorch_lightning.loggers</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLFlowLogger</span>
+
+<span class="n">mlf_logger</span> <span class="o">=</span> <span class="n">MLFlowLogger</span><span class="p">(</span>
+    <span class="n">experiment_name</span><span class="o">=</span><span class="s2">&quot;pytorch-classification&quot;</span><span class="p">,</span>
+    <span class="n">tracking_uri</span><span class="o">=</span><span class="s2">&quot;./mlruns&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">mlf_logger</span><span class="p">)</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataloader</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>参考:</strong> 純粋な PyTorch（本ノートブックの方法）では <code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.autolog()</span></code> はトレーニングループを自動検出しないため、<br />
+エポックごとに明示的に <code class="docutils literal notranslate"><span class="pre">mlflow.log_metric()</span></code> を呼び出す必要があります。</p>
+</section>
+<hr class="docutils" />
+<section id="id6">
+<h2>まとめ<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
+<p>このノートブックでは以下を学びました:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>内容</p></th>
+<th class="head"><p>使用 API</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>合成分類データの生成</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">torch.randn()</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.randint()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>2 層 MLP の定義</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nn.Module</span></code>, <code class="docutils literal notranslate"><span class="pre">nn.Linear</span></code>, <code class="docutils literal notranslate"><span class="pre">nn.ReLU</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>パラメータの記録</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow.log_params()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>エポックごとのメトリクス記録</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow.log_metric(key,</span> <span class="pre">value,</span> <span class="pre">step=epoch)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>モデルの保存</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.log_model()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>モデルのロードと推論</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.load_model()</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>記録内容の確認</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MlflowClient.search_runs()</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="id7">
+<h3>sklearn サンプルとの共通点<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mlflow.set_tracking_uri()</span></code> / <code class="docutils literal notranslate"><span class="pre">mlflow.set_experiment()</span></code> / <code class="docutils literal notranslate"><span class="pre">mlflow.start_run()</span></code> の使い方は同じ</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_model()</span></code> / <code class="docutils literal notranslate"><span class="pre">load_model()</span></code> のパターンはフレームワークが変わっても統一されている</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step</span></code> 引数を使うことで時系列メトリクスを記録できるのが PyTorch 訓練の特徴</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3>次のステップ<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h3>
+<p>次のノートブックでは Optuna と MLflow を連携させたハイパーパラメータ最適化（HPO）と、
+複数の試行結果を比較してベストモデルを Model Registry に登録する手順を学びます。</p>
+<p><strong>次のノートブック:</strong> <span class="xref myst">04_experiment_management/</span></p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/03_pytorch"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../02_sklearn/sklearn_autolog.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">scikit-learn × MLflow チュートリアル</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../04_experiment_management/hyperparam_search.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">ハイパーパラメータ探索と実験比較</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">前提条件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">学習目標</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sklearn">sklearn との共通概念の比較</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">環境セットアップ</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">データ準備</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-4-1">Task 4.1: トレーニングループとエポックごとのメトリクスロギング</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">モデル定義</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow">MLflow によるトレーニングループの記録</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow-ui">MLflow UI で学習曲線を確認</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-4-2-mlflow-pytorch-log-model">Task 4.2: mlflow.pytorch.log_model によるモデル保存とロード</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pytorch-lightning-mlflow-pytorch-autolog">補足: PyTorch Lightning 環境での mlflow.pytorch.autolog()</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">まとめ</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">sklearn サンプルとの共通点</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">次のステップ</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

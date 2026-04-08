@@ -1,0 +1,752 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Requirements Document &#8212; MLflow Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '.kiro/specs/mlflow-tutorial/requirements';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MLflow Tutorial</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/01_concepts/mlflow_overview.html">MLflow 概要 — 4つのコンポーネント</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/02_sklearn/sklearn_autolog.html">scikit-learn × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/03_pytorch/pytorch_tracking.html">PyTorch × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/04_experiment_management/hyperparam_search.html">ハイパーパラメータ探索と実験比較</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/05_champion_challenger/champion_challenger.html">チャンピオン/チャレンジャーモデル管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/06_deployment/fastapi_serving.html">FastAPI による MLflow チャンピオンモデルのサービング</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial/issues/new?title=Issue%20on%20page%20%2F.kiro/specs/mlflow-tutorial/requirements.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/.kiro/specs/mlflow-tutorial/requirements.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Requirements Document</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-1-mlflow">Requirement 1: MLflowコア概念の説明</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#acceptance-criteria">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-2-scikit-learn">Requirement 2: scikit-learnサンプルセット</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-3-pytorch">Requirement 3: PyTorchサンプルセット</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-4">Requirement 4: ハイパーパラメータ最適化・実験比較サンプル</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-5-jupyter-book">Requirement 5: Jupyter Book形式のドキュメント構成</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-6-github-pages">Requirement 6: GitHub Pages自動デプロイ</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-7">Requirement 7: 環境セットアップ・前提条件ガイド</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-8">Requirement 8: オフライン動作保証</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-9">Requirement 9: チャレンジャー/チャンピオン管理</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-10-web">Requirement 10: チャンピオンモデルのWebアプリ搭載・サービング</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-11">Requirement 11: マルチサーバー構成ガイド</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Acceptance Criteria</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="requirements-document">
+<h1>Requirements Document<a class="headerlink" href="#requirements-document" title="Permalink to this heading">#</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>MLflowを端的に理解するためのチュートリアルコンテンツを作成する。対象者はMLflowを初めて使うMLエンジニア・データサイエンティスト。scikit-learnおよびPyTorchを使った実践的なサンプルコードを含み、Jupyter Book形式でGitHub Pagesへ公開できる構成とする。</p>
+<p><strong>運用前提</strong>: チュートリアルのノートブック実行はオフライン環境（インターネット非接続）での動作を保証する。ランタイム中の外部通信（データセットのダウンロード・外部APIコール等）は一切行わない。</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">#</a></h2>
+<section id="requirement-1-mlflow">
+<h3>Requirement 1: MLflowコア概念の説明<a class="headerlink" href="#requirement-1-mlflow" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective:</strong> As a MLエンジニア・データサイエンティスト, I want MLflowの主要コンポーネント（Tracking / Models / Model Registry / Projects）を体系的に学べること, so that MLflowの全体像を短時間で把握できる</p>
+<section id="acceptance-criteria">
+<h4>Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Tutorial shall MLflowの4つの主要コンポーネント（Tracking・Models・Model Registry・Projects）それぞれの役割と相互関係を説明するページを提供する</p></li>
+<li><p>The Tutorial shall 各コンポーネントのページに、概念説明・コード例・実行結果の3セットを含める</p></li>
+<li><p>When 読者が概念ページを読み終えたとき, the Tutorial shall 次に読むべきページへのナビゲーションリンクを提供する</p></li>
+<li><p>The Tutorial shall MLflow Tracking ServerをローカルでUI付きで起動する手順（<code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">ui</span></code>）を含める</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="requirement-2-scikit-learn">
+<h3>Requirement 2: scikit-learnサンプルセット<a class="headerlink" href="#requirement-2-scikit-learn" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective:</strong> As a データサイエンティスト, I want scikit-learnモデルのトレーニングからロギング・登録までを一貫して体験できること, so that 既存のsklearnワークフローにMLflowをどう組み込むか理解できる</p>
+<section id="id1">
+<h4>Acceptance Criteria<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Tutorial shall scikit-learn（例: LogisticRegression / RandomForest）を用いたモデルトレーニングとMLflow Trackingへのメトリクス・パラメータ・アーティファクトのロギングを実演するノートブックを提供する</p></li>
+<li><p>The Tutorial shall <code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.autolog()</span></code> を使った自動ロギングと手動ロギングの両方のコード例を含める</p></li>
+<li><p>When モデルトレーニングが完了したとき, the Tutorial shall Model Registryへのモデル登録手順（<code class="docutils literal notranslate"><span class="pre">mlflow.register_model</span></code>）をコード例で示す</p></li>
+<li><p>The Tutorial shall ロギング済みモデルを <code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.load_model()</span></code> でロードして推論する例を含める</p></li>
+<li><p>If sklearn モデルのロギング中にエラーが発生した場合, the Tutorial shall 典型的なトラブルシューティング手順（バージョン確認・run IDの確認等）を説明する</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="requirement-3-pytorch">
+<h3>Requirement 3: PyTorchサンプルセット<a class="headerlink" href="#requirement-3-pytorch" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective:</strong> As a MLエンジニア, I want PyTorchモデルのトレーニングループとMLflow Trackingを組み合わせた実例を学べること, so that ディープラーニングワークフローにMLflowを適用できる</p>
+<section id="id2">
+<h4>Acceptance Criteria<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Tutorial shall PyTorchを用いた簡単なニューラルネットワーク（合成データによる回帰または分類）のトレーニングループ内でMLflowにメトリクス（loss・accuracy）をエポックごとにロギングするノートブックを提供する（実行時のデータダウンロードは行わない）</p></li>
+<li><p>The Tutorial shall PyTorchモデルを <code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.log_model()</span></code> でアーティファクトとして保存し、後からロードする手順を含める</p></li>
+<li><p>Where PyTorch Lightning が利用可能な環境では, the Tutorial shall <code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.autolog()</span></code> または MLflowLogger の使用例を補足説明として提供する</p></li>
+<li><p>The Tutorial shall sklearnサンプルとPyTorchサンプルで共通する概念（run・experiment・artifact）を対比しながら説明する</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="requirement-4">
+<h3>Requirement 4: ハイパーパラメータ最適化・実験比較サンプル<a class="headerlink" href="#requirement-4" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective:</strong> As a MLエンジニア・データサイエンティスト, I want OptunaによるハイパーパラメータPR最適化とMLflow Trackingを組み合わせた実験管理ワークフローを体験できること, so that 体系的なハイパーパラメータ探索とMLflowのExperiment比較機能の実用的な価値を理解できる</p>
+<section id="id3">
+<h4>Acceptance Criteria<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Tutorial shall Optunaの<code class="docutils literal notranslate"><span class="pre">study.optimize()</span></code>内でMLflow runを自動作成し、各trialのパラメータ・メトリクスをMLflow Trackingに記録するノートブックを提供する</p></li>
+<li><p>The Tutorial shall <code class="docutils literal notranslate"><span class="pre">mlflow.search_runs()</span></code> を使ったプログラム上でのrun検索・ソートのコード例を含める</p></li>
+<li><p>When 複数runが記録されたとき, the Tutorial shall MLflow UIの「Compare」機能でメトリクスチャートを並べて確認する操作手順をスクリーンショットまたはコードで説明する</p></li>
+<li><p>The Tutorial shall Optunaの<code class="docutils literal notranslate"><span class="pre">study.best_trial</span></code>からベストパラメータを取得し、そのrun IDからMLflow上のモデルをModel Registryに登録する手順を含める</p></li>
+<li><p>The Tutorial shall Optunaのsamplerとして<code class="docutils literal notranslate"><span class="pre">TPESampler</span></code>（デフォルト）を使用し、外部インターネット接続不要で動作することを確認する</p></li>
+<li><p>The Tutorial shall Optunaによる最適化のトライアル数・探索空間の設定（<code class="docutils literal notranslate"><span class="pre">trial.suggest_float</span></code> / <code class="docutils literal notranslate"><span class="pre">trial.suggest_int</span></code> / <code class="docutils literal notranslate"><span class="pre">trial.suggest_categorical</span></code>）のコード例を含める</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="requirement-5-jupyter-book">
+<h3>Requirement 5: Jupyter Book形式のドキュメント構成<a class="headerlink" href="#requirement-5-jupyter-book" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective:</strong> As a チュートリアル読者, I want ブラウザ上でインタラクティブに読み進められる構成のドキュメントサイトを閲覧できること, so that コードと説明を一体で把握しやすい</p>
+<section id="id4">
+<h4>Acceptance Criteria<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Tutorial shall <code class="docutils literal notranslate"><span class="pre">jupyter-book</span></code> でビルド可能な <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code> と <code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> を含むプロジェクト構成とする</p></li>
+<li><p>The Tutorial shall 全ての実習コードをJupyter Notebook（<code class="docutils literal notranslate"><span class="pre">.ipynb</span></code>）として提供し、Jupyter Book上でレンダリングされる状態にする</p></li>
+<li><p>The Tutorial shall 各ノートブックに「前提条件」「学習目標」「まとめ」のセクションを設ける</p></li>
+<li><p>If ビルド時に依存パッケージが不足している場合, the Tutorial shall <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> または <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> に必要パッケージを明示し、インストールコマンドをREADMEに記載する</p></li>
+<li><p>The Tutorial shall <code class="docutils literal notranslate"><span class="pre">jupyter-book</span> <span class="pre">build</span> <span class="pre">.</span></code> コマンド1つでローカルビルドが完了する構成とする</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="requirement-6-github-pages">
+<h3>Requirement 6: GitHub Pages自動デプロイ<a class="headerlink" href="#requirement-6-github-pages" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective:</strong> As a チュートリアル管理者, I want mainブランチへのpush時に自動でGitHub Pagesへ公開できること, so that コンテンツ更新の運用コストを最小化できる</p>
+<section id="id5">
+<h4>Acceptance Criteria<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Tutorial shall GitHub Actionsワークフロー（<code class="docutils literal notranslate"><span class="pre">.github/workflows/deploy.yml</span></code>）を提供し、mainブランチへのpush時にJupyter Bookをビルドして <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> ブランチへデプロイする</p></li>
+<li><p>The Tutorial shall GitHub Actions上でノートブックを実行せず、事前実行済みの出力をリポジトリに含める方針（<code class="docutils literal notranslate"><span class="pre">execute_notebooks:</span> <span class="pre">off</span></code>）を採用するか、またはキャッシュ戦略を明示する</p></li>
+<li><p>When デプロイが成功したとき, the Tutorial shall GitHub Pagesの公開URLでサイトが閲覧可能になる</p></li>
+<li><p>If GitHub Actionsのビルドが失敗した場合, the Tutorial shall エラーログから原因を特定できるよう、ビルドステップを分割して記録する</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="requirement-7">
+<h3>Requirement 7: 環境セットアップ・前提条件ガイド<a class="headerlink" href="#requirement-7" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective:</strong> As a MLflowを初めて使う読者, I want ローカル環境の構築手順を迷わず実行できること, so that チュートリアル開始までのハードルを最小化できる</p>
+<section id="id6">
+<h4>Acceptance Criteria<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Tutorial shall Python・conda・MLflowのインストール手順と動作確認コマンドを含む「はじめに」ページを提供する</p></li>
+<li><p>The Tutorial shall チュートリアル全体で使用するPythonおよび主要ライブラリのバージョン（MLflow・scikit-learn・PyTorch）を明記する</p></li>
+<li><p>The Tutorial shall MLflow Tracking Serverのローカル起動（<code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">server</span></code> / <code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">ui</span></code>）とサンプルコードの実行に必要な最小限の手順を5ステップ以内で説明する</p></li>
+<li><p>The Tutorial shall ローカル開発環境としてconda仮想環境（<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">mlflow-tutorial</span> <span class="pre">python=X.X</span></code> / <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">mlflow-tutorial</span></code>）を標準とし、その手順を「はじめに」ページに記載する</p></li>
+<li><p>The Tutorial shall オフライン環境向けに <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">--offline</span></code> またはcondaローカルチャネル経由でのパッケージインストール手順を補足として提供する（pipのwheel方式も併記可）</p></li>
+<li><p>The Tutorial shall 学習フェーズ（ノートブック実行）はシングルマシン向けにローカルファイルシステム（<code class="docutils literal notranslate"><span class="pre">mlruns/</span></code>）を使用し、デプロイフェーズ（Req 10・11）ではMLflow Tracking Serverを別ホストで起動する2パターンを段階的に説明する</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="requirement-8">
+<h3>Requirement 8: オフライン動作保証<a class="headerlink" href="#requirement-8" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective:</strong> As a オフライン環境のMLエンジニア・データサイエンティスト, I want パッケージインストール後のノートブック実行をインターネット接続なしで完了できること, so that ネットワーク制限のある企業環境や閉域網でもチュートリアルを利用できる</p>
+<section id="id7">
+<h4>Acceptance Criteria<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Tutorial shall 全ノートブックで使用するデータセットをsklearn内蔵データセット（<code class="docutils literal notranslate"><span class="pre">sklearn.datasets</span></code>）またはコード内で生成する合成データ（<code class="docutils literal notranslate"><span class="pre">numpy</span></code>・<code class="docutils literal notranslate"><span class="pre">torch</span></code> での乱数生成）のみに限定し、実行時のダウンロードを行わない</p></li>
+<li><p>The Tutorial shall <code class="docutils literal notranslate"><span class="pre">torchvision.datasets</span></code>・<code class="docutils literal notranslate"><span class="pre">datasets</span></code>（HuggingFace）等のダウンロードを伴うデータセットAPIを使用しない</p></li>
+<li><p>The Tutorial shall 外部インターネットへの接続を一切行わず、内部ネットワーク（MLflow Tracking Server・アプリサーバー間）のみで動作する構成を前提とする</p></li>
+<li><p>If インターネット接続が存在しない環境でノートブックを実行した場合, the Tutorial shall 全セルが正常に完了する</p></li>
+<li><p>The Tutorial shall 外部クラウドサービス（AWS S3・Azure Blob・GCS等）へのアーティファクト保存を使用せず、MLflow Tracking Serverのローカルファイルシステムのみを使用する</p></li>
+<li><p>The Tutorial shall「ネットワーク前提」として、インターネット接続が必要なステップ（初回パッケージインストールのみ）・内部ネットワークが必要なステップ（MLflow Server接続・モデル取得）・完全ローカルで完結するステップを「はじめに」ページで明確に区別して説明する</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="requirement-9">
+<h3>Requirement 9: チャレンジャー/チャンピオン管理<a class="headerlink" href="#requirement-9" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective:</strong> As a MLエンジニア・データサイエンティスト, I want MLflow Model Registryのエイリアス機能を使って複数モデルバージョンをチャレンジャー/チャンピオンとして管理するワークフローを学べること, so that 本番モデルの安全な更新・ロールバック手順を習得できる</p>
+<section id="id8">
+<h4>Acceptance Criteria<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Tutorial shall MLflow Model Registry にモデルを登録し、<code class="docutils literal notranslate"><span class="pre">MlflowClient.set_registered_model_alias()</span></code> を使って <code class="docutils literal notranslate"><span class="pre">&quot;champion&quot;</span></code> および <code class="docutils literal notranslate"><span class="pre">&quot;challenger&quot;</span></code> エイリアスを付与する手順をノートブックで実演する</p></li>
+<li><p>The Tutorial shall チャレンジャーモデルとチャンピオンモデルのメトリクスをプログラム上で比較し（<code class="docutils literal notranslate"><span class="pre">MlflowClient.search_model_versions()</span></code> + <code class="docutils literal notranslate"><span class="pre">get_run()</span></code> によるメトリクス取得）、チャレンジャーが優れる場合にエイリアスを昇格させる（<code class="docutils literal notranslate"><span class="pre">champion</span></code> ← 旧 <code class="docutils literal notranslate"><span class="pre">challenger</span></code>）コード例を含める</p></li>
+<li><p>When チャレンジャーがチャンピオンに昇格したとき, the Tutorial shall 旧チャンピオンのエイリアスを削除または <code class="docutils literal notranslate"><span class="pre">&quot;archived&quot;</span></code> エイリアスへ移行するコードを示す</p></li>
+<li><p>The Tutorial shall <code class="docutils literal notranslate"><span class="pre">models:/モデル名&#64;champion</span></code> 形式のURIでチャンピオンモデルをロードする方法を説明する</p></li>
+<li><p>The Tutorial shall チャンピオン/チャレンジャー管理のライフサイクル（登録→評価→昇格→ロールバック）を図またはフローチャートで示す</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="requirement-10-web">
+<h3>Requirement 10: チャンピオンモデルのWebアプリ搭載・サービング<a class="headerlink" href="#requirement-10-web" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective:</strong> As a MLエンジニア, I want MLflow Model Registryのチャンピオンモデルを最小限のWebアプリに組み込んで推論APIとして提供する構成を学べること, so that モデルのデプロイメントパターンを実務レベルで理解できる</p>
+<section id="id9">
+<h4>Acceptance Criteria<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Tutorial shall FastAPIまたはStreamlitを使ったWebアプリのサンプルコード（<code class="docutils literal notranslate"><span class="pre">app/</span></code>ディレクトリ）を提供し、起動時に <code class="docutils literal notranslate"><span class="pre">models:/モデル名&#64;champion</span></code> からモデルを動的にロードする実装を含める</p></li>
+<li><p>The Tutorial shall WebアプリがMLflow Tracking Serverに対して内部ネットワーク経由（例: <code class="docutils literal notranslate"><span class="pre">http://mlflow-server:5000</span></code>）で接続し、チャンピオンモデルを取得する構成を示す</p></li>
+<li><p>The Tutorial shall MLflow Tracking Server・Webアプリサーバーを別々のプロセス（例: 別ターミナル・別仮想環境）または別ホストで起動することを前提とした起動手順書を提供する</p></li>
+<li><p>When チャンピオンモデルのエイリアスが更新されたとき, the Tutorial shall Webアプリ再起動またはエンドポイント経由のモデルリロードによって新チャンピオンを反映する手順を説明する</p></li>
+<li><p>The Tutorial shall Webアプリの推論エンドポイント（例: <code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/predict</span></code>）に入力データを送信し、予測結果を返すcurlまたはPythonのリクエスト例を含める</p></li>
+<li><p>If MLflow Tracking Serverへの接続が失敗した場合, the Tutorial shall Webアプリが起動エラーを明示的に出力し、接続先URIの確認手順を示す</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="requirement-11">
+<h3>Requirement 11: マルチサーバー構成ガイド<a class="headerlink" href="#requirement-11" title="Permalink to this heading">#</a></h3>
+<p><strong>Objective:</strong> As a インフラ担当MLエンジニア, I want MLflow Tracking Serverとアプリサーバーを分離した構成を理解・再現できること, so that 本番環境に近い役割分担で各コンポーネントを運用できる</p>
+<section id="id10">
+<h4>Acceptance Criteria<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>The Tutorial shall 以下の役割分担を図示する: <strong>MLflow Serverホスト</strong>（Tracking Server・Model Registry・アーティファクトストレージ）/ <strong>アプリサーバーホスト</strong>（WebアプリまたはAPIサーバー）</p></li>
+<li><p>The Tutorial shall 個別の起動コマンド（別ターミナルでの <code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">server</span></code> とアプリ起動）を使って2サーバー構成をローカル環境で再現する手順を提供する（外部インターネット接続は不要）</p></li>
+<li><p>The Tutorial shall MLflow Serverの <code class="docutils literal notranslate"><span class="pre">--host</span> <span class="pre">0.0.0.0</span></code> オプションおよびアーティファクトルート（<code class="docutils literal notranslate"><span class="pre">--default-artifact-root</span></code>）の設定を含む起動コマンド例を示す</p></li>
+<li><p>The Tutorial shall アプリサーバー側の環境変数（<code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI</span></code>）によってMLflow接続先を設定する方法を説明する</p></li>
+<li><p>While 2サーバーが内部ネットワークで接続されている間, the Tutorial shall アプリサーバーがチャンピオンモデルを正常にロードできることを確認するヘルスチェック手順を示す</p></li>
+</ol>
+</section>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./.kiro/specs/mlflow-tutorial"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-1-mlflow">Requirement 1: MLflowコア概念の説明</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#acceptance-criteria">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-2-scikit-learn">Requirement 2: scikit-learnサンプルセット</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-3-pytorch">Requirement 3: PyTorchサンプルセット</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-4">Requirement 4: ハイパーパラメータ最適化・実験比較サンプル</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-5-jupyter-book">Requirement 5: Jupyter Book形式のドキュメント構成</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-6-github-pages">Requirement 6: GitHub Pages自動デプロイ</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-7">Requirement 7: 環境セットアップ・前提条件ガイド</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-8">Requirement 8: オフライン動作保証</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-9">Requirement 9: チャレンジャー/チャンピオン管理</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-10-web">Requirement 10: チャンピオンモデルのWebアプリ搭載・サービング</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Acceptance Criteria</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-11">Requirement 11: マルチサーバー構成ガイド</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Acceptance Criteria</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

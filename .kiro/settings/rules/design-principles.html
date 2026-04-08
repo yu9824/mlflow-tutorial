@@ -1,0 +1,826 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Technical Design Rules and Principles &#8212; MLflow Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '.kiro/settings/rules/design-principles';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MLflow Tutorial</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/01_concepts/mlflow_overview.html">MLflow 概要 — 4つのコンポーネント</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/02_sklearn/sklearn_autolog.html">scikit-learn × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/03_pytorch/pytorch_tracking.html">PyTorch × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/04_experiment_management/hyperparam_search.html">ハイパーパラメータ探索と実験比較</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/05_champion_challenger/champion_challenger.html">チャンピオン/チャレンジャーモデル管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/06_deployment/fastapi_serving.html">FastAPI による MLflow チャンピオンモデルのサービング</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial/issues/new?title=Issue%20on%20page%20%2F.kiro/settings/rules/design-principles.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/.kiro/settings/rules/design-principles.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Technical Design Rules and Principles</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-design-principles">Core Design Principles</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#type-safety-is-mandatory">1. Type Safety is Mandatory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-vs-implementation">2. Design vs Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-communication">3. Visual Communication</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#component-design-rules">4. Component Design Rules</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-modeling-standards">5. Data Modeling Standards</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-handling-philosophy">6. Error Handling Philosophy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-patterns">7. Integration Patterns</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation-standards">Documentation Standards</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-and-tone">Language and Tone</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-requirements">Structure Requirements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#section-authoring-guidance">Section Authoring Guidance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#global-ordering">Global Ordering</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-ids">Requirement IDs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technology-stack">Technology Stack</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-flows">System Flows</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-traceability">Requirements Traceability</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#components-interfaces-authoring">Components &amp; Interfaces Authoring</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-interfaces-props">Shared Interfaces &amp; Props</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-testing-security-performance-sections">Error/Testing/Security/Performance Sections</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diagram-text-deduplication">Diagram &amp; Text Deduplication</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general-deduplication">General Deduplication</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diagram-guidelines">Diagram Guidelines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-to-include-a-diagram">When to include a diagram</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mermaid-requirements">Mermaid requirements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-metrics">Quality Metrics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-completeness-checklist">Design Completeness Checklist</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-anti-patterns-to-avoid">Common Anti-patterns to Avoid</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="technical-design-rules-and-principles">
+<h1>Technical Design Rules and Principles<a class="headerlink" href="#technical-design-rules-and-principles" title="Permalink to this heading">#</a></h1>
+<section id="core-design-principles">
+<h2>Core Design Principles<a class="headerlink" href="#core-design-principles" title="Permalink to this heading">#</a></h2>
+<section id="type-safety-is-mandatory">
+<h3>1. Type Safety is Mandatory<a class="headerlink" href="#type-safety-is-mandatory" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>NEVER</strong> use <code class="docutils literal notranslate"><span class="pre">any</span></code> type in TypeScript interfaces</p></li>
+<li><p>Define explicit types for all parameters and returns</p></li>
+<li><p>Use discriminated unions for error handling</p></li>
+<li><p>Specify generic constraints clearly</p></li>
+</ul>
+</section>
+<section id="design-vs-implementation">
+<h3>2. Design vs Implementation<a class="headerlink" href="#design-vs-implementation" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Focus on WHAT, not HOW</strong></p></li>
+<li><p>Define interfaces and contracts, not code</p></li>
+<li><p>Specify behavior through pre/post conditions</p></li>
+<li><p>Document architectural decisions, not algorithms</p></li>
+</ul>
+</section>
+<section id="visual-communication">
+<h3>3. Visual Communication<a class="headerlink" href="#visual-communication" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Simple features</strong>: Basic component diagram or none</p></li>
+<li><p><strong>Medium complexity</strong>: Architecture + data flow</p></li>
+<li><p><strong>High complexity</strong>: Multiple diagrams (architecture, sequence, state)</p></li>
+<li><p><strong>Always pure Mermaid</strong>: No styling, just structure</p></li>
+</ul>
+</section>
+<section id="component-design-rules">
+<h3>4. Component Design Rules<a class="headerlink" href="#component-design-rules" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Single Responsibility</strong>: One clear purpose per component</p></li>
+<li><p><strong>Clear Boundaries</strong>: Explicit domain ownership</p></li>
+<li><p><strong>Dependency Direction</strong>: Follow architectural layers</p></li>
+<li><p><strong>Interface Segregation</strong>: Minimal, focused interfaces</p></li>
+<li><p><strong>Team-safe Interfaces</strong>: Design boundaries that allow parallel implementation without merge conflicts</p></li>
+<li><p><strong>Research Traceability</strong>: Record boundary decisions and rationale in <code class="docutils literal notranslate"><span class="pre">research.md</span></code></p></li>
+</ul>
+</section>
+<section id="data-modeling-standards">
+<h3>5. Data Modeling Standards<a class="headerlink" href="#data-modeling-standards" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Domain First</strong>: Start with business concepts</p></li>
+<li><p><strong>Consistency Boundaries</strong>: Clear aggregate roots</p></li>
+<li><p><strong>Normalization</strong>: Balance between performance and integrity</p></li>
+<li><p><strong>Evolution</strong>: Plan for schema changes</p></li>
+</ul>
+</section>
+<section id="error-handling-philosophy">
+<h3>6. Error Handling Philosophy<a class="headerlink" href="#error-handling-philosophy" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Fail Fast</strong>: Validate early and clearly</p></li>
+<li><p><strong>Graceful Degradation</strong>: Partial functionality over complete failure</p></li>
+<li><p><strong>User Context</strong>: Actionable error messages</p></li>
+<li><p><strong>Observability</strong>: Comprehensive logging and monitoring</p></li>
+</ul>
+</section>
+<section id="integration-patterns">
+<h3>7. Integration Patterns<a class="headerlink" href="#integration-patterns" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Loose Coupling</strong>: Minimize dependencies</p></li>
+<li><p><strong>Contract First</strong>: Define interfaces before implementation</p></li>
+<li><p><strong>Versioning</strong>: Plan for API evolution</p></li>
+<li><p><strong>Idempotency</strong>: Design for retry safety</p></li>
+<li><p><strong>Contract Visibility</strong>: Surface API and event contracts in design.md while linking extended details from <code class="docutils literal notranslate"><span class="pre">research.md</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="documentation-standards">
+<h2>Documentation Standards<a class="headerlink" href="#documentation-standards" title="Permalink to this heading">#</a></h2>
+<section id="language-and-tone">
+<h3>Language and Tone<a class="headerlink" href="#language-and-tone" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Declarative</strong>: “The system authenticates users” not “The system should authenticate”</p></li>
+<li><p><strong>Precise</strong>: Specific technical terms over vague descriptions</p></li>
+<li><p><strong>Concise</strong>: Essential information only</p></li>
+<li><p><strong>Formal</strong>: Professional technical writing</p></li>
+</ul>
+</section>
+<section id="structure-requirements">
+<h3>Structure Requirements<a class="headerlink" href="#structure-requirements" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Hierarchical</strong>: Clear section organization</p></li>
+<li><p><strong>Traceable</strong>: Requirements to components mapping</p></li>
+<li><p><strong>Complete</strong>: All aspects covered for implementation</p></li>
+<li><p><strong>Consistent</strong>: Uniform terminology throughout</p></li>
+<li><p><strong>Focused</strong>: Keep design.md centered on architecture and contracts; move investigation logs and lengthy comparisons to <code class="docutils literal notranslate"><span class="pre">research.md</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="section-authoring-guidance">
+<h2>Section Authoring Guidance<a class="headerlink" href="#section-authoring-guidance" title="Permalink to this heading">#</a></h2>
+<section id="global-ordering">
+<h3>Global Ordering<a class="headerlink" href="#global-ordering" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Default flow: Overview → Goals/Non-Goals → Requirements Traceability → Architecture → Technology Stack → System Flows → Components &amp; Interfaces → Data Models → Optional sections.</p></li>
+<li><p>Teams may swap Traceability earlier or place Data Models nearer Architecture when it improves clarity, but keep section headings intact.</p></li>
+<li><p>Within each section, follow <strong>Summary → Scope → Decisions → Impacts/Risks</strong> so reviewers can scan consistently.</p></li>
+</ul>
+</section>
+<section id="requirement-ids">
+<h3>Requirement IDs<a class="headerlink" href="#requirement-ids" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Reference requirements as <code class="docutils literal notranslate"><span class="pre">2.1,</span> <span class="pre">2.3</span></code> without prefixes (no “Requirement 2.1”).</p></li>
+<li><p>All requirements MUST have numeric IDs. If a requirement lacks a numeric ID, stop and fix <code class="docutils literal notranslate"><span class="pre">requirements.md</span></code> before continuing.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">N.M</span></code>-style numeric IDs where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the top-level requirement number from requirements.md (for example, Requirement 1 → 1.1, 1.2; Requirement 2 → 2.1, 2.2).</p></li>
+<li><p>Every component, task, and traceability row must reference the same canonical numeric ID.</p></li>
+</ul>
+</section>
+<section id="technology-stack">
+<h3>Technology Stack<a class="headerlink" href="#technology-stack" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Include ONLY layers impacted by this feature (frontend, backend, data, messaging, infra).</p></li>
+<li><p>For each layer specify tool/library + version + the role it plays; push extended rationale, comparisons, or benchmarks to <code class="docutils literal notranslate"><span class="pre">research.md</span></code>.</p></li>
+<li><p>When extending an existing system, highlight deviations from the current stack and list new dependencies.</p></li>
+</ul>
+</section>
+<section id="system-flows">
+<h3>System Flows<a class="headerlink" href="#system-flows" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Add diagrams only when they clarify behavior:</p>
+<ul>
+<li><p><strong>Sequence</strong> for multi-step interactions</p></li>
+<li><p><strong>Process/State</strong> for branching rules or lifecycle</p></li>
+<li><p><strong>Data/Event</strong> for pipelines or async patterns</p></li>
+</ul>
+</li>
+<li><p>Always use pure Mermaid. If no complex flow exists, omit the entire section.</p></li>
+</ul>
+</section>
+<section id="requirements-traceability">
+<h3>Requirements Traceability<a class="headerlink" href="#requirements-traceability" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Use the standard table (<code class="docutils literal notranslate"><span class="pre">Requirement</span> <span class="pre">|</span> <span class="pre">Summary</span> <span class="pre">|</span> <span class="pre">Components</span> <span class="pre">|</span> <span class="pre">Interfaces</span> <span class="pre">|</span> <span class="pre">Flows</span></code>) to prove coverage.</p></li>
+<li><p>Collapse to bullet form only when a single requirement maps 1:1 to a component.</p></li>
+<li><p>Prefer the component summary table for simple mappings; reserve the full traceability table for complex or compliance-sensitive requirements.</p></li>
+<li><p>Re-run this mapping whenever requirements or components change to avoid drift.</p></li>
+</ul>
+</section>
+<section id="components-interfaces-authoring">
+<h3>Components &amp; Interfaces Authoring<a class="headerlink" href="#components-interfaces-authoring" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Group components by domain/layer and provide one block per component.</p></li>
+<li><p>Begin with a summary table listing Component, Domain, Intent, Requirement coverage, key dependencies, and selected contracts.</p></li>
+<li><p>Table fields: Intent (one line), Requirements (<code class="docutils literal notranslate"><span class="pre">2.1,</span> <span class="pre">2.3</span></code>), Owner/Reviewers (optional).</p></li>
+<li><p>Dependencies table must mark each entry as Inbound/Outbound/External and assign Criticality (<code class="docutils literal notranslate"><span class="pre">P0</span></code> blocking, <code class="docutils literal notranslate"><span class="pre">P1</span></code> high-risk, <code class="docutils literal notranslate"><span class="pre">P2</span></code> informational).</p></li>
+<li><p>Summaries of external dependency research stay here; detailed investigation (API signatures, rate limits, migration notes) belongs in <code class="docutils literal notranslate"><span class="pre">research.md</span></code>.</p></li>
+<li><p>design.md must remain a self-contained reviewer artifact. Reference <code class="docutils literal notranslate"><span class="pre">research.md</span></code> only for background, and restate any conclusions or decisions here.</p></li>
+<li><p>Contracts: tick only the relevant types (Service/API/Event/Batch/State). Unchecked types should not appear later in the component section.</p></li>
+<li><p>Service interfaces must declare method signatures, inputs/outputs, and error envelopes. API/Event/Batch contracts require schema tables or bullet lists covering trigger, payload, delivery, idempotency.</p></li>
+<li><p>Use <strong>Integration &amp; Migration Notes</strong>, <strong>Validation Hooks</strong>, and <strong>Open Questions / Risks</strong> to document rollout strategy, observability, and unresolved decisions.</p></li>
+<li><p>Detail density rules:</p>
+<ul>
+<li><p><strong>Full block</strong>: components introducing new boundaries (logic hooks, shared services, external integrations, data layers).</p></li>
+<li><p><strong>Summary-only</strong>: presentational/UI components with no new boundaries (plus a short Implementation Note if needed).</p></li>
+</ul>
+</li>
+<li><p>Implementation Notes must combine Integration / Validation / Risks into a single bulleted subsection to reduce repetition.</p></li>
+<li><p>Prefer lists or inline descriptors for short data (dependencies, contract selections). Use tables only when comparing multiple items.</p></li>
+</ul>
+</section>
+<section id="shared-interfaces-props">
+<h3>Shared Interfaces &amp; Props<a class="headerlink" href="#shared-interfaces-props" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Define a base interface (e.g., <code class="docutils literal notranslate"><span class="pre">BaseUIPanelProps</span></code>) for recurring UI components and extend it per component to capture only the deltas.</p></li>
+<li><p>Hooks, utilities, and integration adapters that introduce new contracts should still include full TypeScript signatures.</p></li>
+<li><p>When reusing a base contract, reference it explicitly (e.g., “Extends <code class="docutils literal notranslate"><span class="pre">BaseUIPanelProps</span></code> with <code class="docutils literal notranslate"><span class="pre">onSubmitAnswer</span></code> callback”) instead of duplicating the code block.</p></li>
+</ul>
+</section>
+<section id="data-models">
+<h3>Data Models<a class="headerlink" href="#data-models" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Domain Model covers aggregates, entities, value objects, domain events, and invariants. Add Mermaid diagrams only when relationships are non-trivial.</p></li>
+<li><p>Logical Data Model should articulate structure, indexing, sharding, and storage-specific considerations (event store, KV/wide-column) relevant to the change.</p></li>
+<li><p>Data Contracts &amp; Integration section documents API payloads, event schemas, and cross-service synchronization patterns when the feature crosses boundaries.</p></li>
+<li><p>Lengthy type definitions or vendor-specific option objects should be placed in the Supporting References section within design.md, linked from the relevant section. Investigation notes stay in <code class="docutils literal notranslate"><span class="pre">research.md</span></code>.</p></li>
+<li><p>Supporting References usage is optional; only create it when keeping the content in the main body would reduce readability. All decisions must still appear in the main sections so design.md stands alone.</p></li>
+</ul>
+</section>
+<section id="error-testing-security-performance-sections">
+<h3>Error/Testing/Security/Performance Sections<a class="headerlink" href="#error-testing-security-performance-sections" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Record only feature-specific decisions or deviations. Link or reference organization-wide standards (steering) for baseline practices instead of restating them.</p></li>
+</ul>
+</section>
+<section id="diagram-text-deduplication">
+<h3>Diagram &amp; Text Deduplication<a class="headerlink" href="#diagram-text-deduplication" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Do not restate diagram content verbatim in prose. Use the text to highlight key decisions, trade-offs, or impacts that are not obvious from the visual.</p></li>
+<li><p>When a decision is fully captured in the diagram annotations, a short “Key Decisions” bullet is sufficient.</p></li>
+</ul>
+</section>
+<section id="general-deduplication">
+<h3>General Deduplication<a class="headerlink" href="#general-deduplication" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Avoid repeating the same information across Overview, Architecture, and Components. Reference earlier sections when context is identical.</p></li>
+<li><p>If a requirement/component relationship is captured in the summary table, do not rewrite it elsewhere unless extra nuance is added.</p></li>
+</ul>
+</section>
+</section>
+<section id="diagram-guidelines">
+<h2>Diagram Guidelines<a class="headerlink" href="#diagram-guidelines" title="Permalink to this heading">#</a></h2>
+<section id="when-to-include-a-diagram">
+<h3>When to include a diagram<a class="headerlink" href="#when-to-include-a-diagram" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Architecture</strong>: Use a structural diagram when 3+ components or external systems interact.</p></li>
+<li><p><strong>Sequence</strong>: Draw a sequence diagram when calls/handshakes span multiple steps.</p></li>
+<li><p><strong>State / Flow</strong>: Capture complex state machines or business flows in a dedicated diagram.</p></li>
+<li><p><strong>ER</strong>: Provide an entity-relationship diagram for non-trivial data models.</p></li>
+<li><p><strong>Skip</strong>: Minor one-component changes generally do not need diagrams.</p></li>
+</ul>
+</section>
+<section id="mermaid-requirements">
+<h3>Mermaid requirements<a class="headerlink" href="#mermaid-requirements" title="Permalink to this heading">#</a></h3>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>graph TB
+    Client --&gt; ApiGateway
+    ApiGateway --&gt; ServiceA
+    ApiGateway --&gt; ServiceB
+    ServiceA --&gt; Database
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Plain Mermaid only</strong> – avoid custom styling or unsupported syntax.</p></li>
+<li><p><strong>Node IDs</strong> – alphanumeric plus underscores only (e.g., <code class="docutils literal notranslate"><span class="pre">Client</span></code>, <code class="docutils literal notranslate"><span class="pre">ServiceA</span></code>). Do not use <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code>, or leading <code class="docutils literal notranslate"><span class="pre">-</span></code>.</p></li>
+<li><p><strong>Labels</strong> – simple words. Do not embed parentheses <code class="docutils literal notranslate"><span class="pre">()</span></code>, square brackets <code class="docutils literal notranslate"><span class="pre">[]</span></code>, quotes <code class="docutils literal notranslate"><span class="pre">&quot;</span></code>, or slashes <code class="docutils literal notranslate"><span class="pre">/</span></code>.</p>
+<ul>
+<li><p>❌ <code class="docutils literal notranslate"><span class="pre">DnD[&#64;dnd-kit/core]</span></code> → invalid ID (<code class="docutils literal notranslate"><span class="pre">&#64;</span></code>).</p></li>
+<li><p>❌ <code class="docutils literal notranslate"><span class="pre">UI[KanbanBoard(React)]</span></code> → invalid label (<code class="docutils literal notranslate"><span class="pre">()</span></code>).</p></li>
+<li><p>✅ <code class="docutils literal notranslate"><span class="pre">DndKit[dnd-kit</span> <span class="pre">core]</span></code> → use plain text in labels, keep technology details in the accompanying description.</p></li>
+<li><p>ℹ️ Mermaid strict-mode will otherwise fail with errors like <code class="docutils literal notranslate"><span class="pre">Expecting</span> <span class="pre">'SQE'</span> <span class="pre">...</span> <span class="pre">got</span> <span class="pre">'PS'</span></code>; remove punctuation from labels before rendering.</p></li>
+</ul>
+</li>
+<li><p><strong>Edges</strong> – show data or control flow direction.</p></li>
+<li><p><strong>Groups</strong> – using Mermaid subgraphs to cluster related components is allowed; use it sparingly for clarity.</p></li>
+</ul>
+</section>
+</section>
+<section id="quality-metrics">
+<h2>Quality Metrics<a class="headerlink" href="#quality-metrics" title="Permalink to this heading">#</a></h2>
+<section id="design-completeness-checklist">
+<h3>Design Completeness Checklist<a class="headerlink" href="#design-completeness-checklist" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>All requirements addressed</p></li>
+<li><p>No implementation details leaked</p></li>
+<li><p>Clear component boundaries</p></li>
+<li><p>Explicit error handling</p></li>
+<li><p>Comprehensive test strategy</p></li>
+<li><p>Security considered</p></li>
+<li><p>Performance targets defined</p></li>
+<li><p>Migration path clear (if applicable)</p></li>
+</ul>
+</section>
+<section id="common-anti-patterns-to-avoid">
+<h3>Common Anti-patterns to Avoid<a class="headerlink" href="#common-anti-patterns-to-avoid" title="Permalink to this heading">#</a></h3>
+<p>❌ Mixing design with implementation
+❌ Vague interface definitions
+❌ Missing error scenarios
+❌ Ignored non-functional requirements
+❌ Overcomplicated architectures
+❌ Tight coupling between components
+❌ Missing data consistency strategy
+❌ Incomplete dependency analysis</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./.kiro/settings/rules"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-design-principles">Core Design Principles</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#type-safety-is-mandatory">1. Type Safety is Mandatory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-vs-implementation">2. Design vs Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-communication">3. Visual Communication</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#component-design-rules">4. Component Design Rules</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-modeling-standards">5. Data Modeling Standards</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-handling-philosophy">6. Error Handling Philosophy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-patterns">7. Integration Patterns</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation-standards">Documentation Standards</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-and-tone">Language and Tone</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-requirements">Structure Requirements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#section-authoring-guidance">Section Authoring Guidance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#global-ordering">Global Ordering</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirement-ids">Requirement IDs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technology-stack">Technology Stack</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-flows">System Flows</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-traceability">Requirements Traceability</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#components-interfaces-authoring">Components &amp; Interfaces Authoring</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-interfaces-props">Shared Interfaces &amp; Props</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-testing-security-performance-sections">Error/Testing/Security/Performance Sections</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#diagram-text-deduplication">Diagram &amp; Text Deduplication</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general-deduplication">General Deduplication</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diagram-guidelines">Diagram Guidelines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-to-include-a-diagram">When to include a diagram</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mermaid-requirements">Mermaid requirements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-metrics">Quality Metrics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-completeness-checklist">Design Completeness Checklist</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-anti-patterns-to-avoid">Common Anti-patterns to Avoid</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

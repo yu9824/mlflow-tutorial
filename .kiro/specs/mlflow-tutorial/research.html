@@ -1,0 +1,750 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Research &amp; Design Decisions &#8212; MLflow Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '.kiro/specs/mlflow-tutorial/research';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MLflow Tutorial</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/01_concepts/mlflow_overview.html">MLflow 概要 — 4つのコンポーネント</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/02_sklearn/sklearn_autolog.html">scikit-learn × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/03_pytorch/pytorch_tracking.html">PyTorch × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/04_experiment_management/hyperparam_search.html">ハイパーパラメータ探索と実験比較</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/05_champion_challenger/champion_challenger.html">チャンピオン/チャレンジャーモデル管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/06_deployment/fastapi_serving.html">FastAPI による MLflow チャンピオンモデルのサービング</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial/issues/new?title=Issue%20on%20page%20%2F.kiro/specs/mlflow-tutorial/research.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/.kiro/specs/mlflow-tutorial/research.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Research & Design Decisions</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#research-log">Research Log</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow-model-registry-api">MLflow Model Registry エイリアス API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter-book">Jupyter Book バージョン選定</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#github-actions-github-pages">GitHub Actions による GitHub Pages デプロイ</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fastapi-mlflow">FastAPI + MLflow モデルサービング</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conda">conda オフラインインストール</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optuna-mlflow">Optuna + MLflow 統合パターン</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-pattern-evaluation">Architecture Pattern Evaluation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#design-decisions">Design Decisions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-jupyter-book-0-15-x">Decision: Jupyter Book バージョンを 0.15.x に固定する</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-web-fastapi">Decision: Webアプリフレームワークを FastAPI に決定する</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-pre-executed">Decision: ノートブック実行方式を pre-executed（出力コミット）に固定する</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#risks-mitigations">Risks &amp; Mitigations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="research-design-decisions">
+<h1>Research &amp; Design Decisions<a class="headerlink" href="#research-design-decisions" title="Permalink to this heading">#</a></h1>
+<hr class="docutils" />
+<p><strong>Purpose</strong>: 設計判断の根拠となる調査結果・アーキテクチャ評価・リスクを記録する。</p>
+<hr class="docutils" />
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Feature</strong>: <code class="docutils literal notranslate"><span class="pre">mlflow-tutorial</span></code></p></li>
+<li><p><strong>Discovery Scope</strong>: New Feature（グリーンフィールド）</p></li>
+<li><p><strong>Key Findings</strong>:</p>
+<ul>
+<li><p>MLflow エイリアス API（<code class="docutils literal notranslate"><span class="pre">set_registered_model_alias</span></code> / <code class="docutils literal notranslate"><span class="pre">models:/name&#64;alias</span></code>）は MLflow 2.8.0 で導入。チュートリアル全体でこのバージョン以上を前提とする</p></li>
+<li><p>Jupyter Book 2.0 は <code class="docutils literal notranslate"><span class="pre">myst.yml</span></code> に移行済みだが、v0.15.x（1.x 系）の <code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> / <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code> が要件で明示されているため、安定版 0.15.x を採用する</p></li>
+<li><p>FastAPI の lifespan コンテキストマネージャーを使えばアプリ起動時に champion モデルを安全にロードできる。MLflow 2.x の Python クライアントは同期モードで動作するため、lifespan 内で呼び出すのが適切</p></li>
+<li><p>Docker 不使用のマルチサーバー構成は、別ターミナルでの <code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">server</span></code> + <code class="docutils literal notranslate"><span class="pre">uvicorn</span></code> 起動という2プロセス構成で再現する</p></li>
+<li><p>conda オフラインチャンネルは <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">index</span></code> でローカル repodata を生成し <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">file:///path/to/channel</span></code> でインストールする</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="research-log">
+<h2>Research Log<a class="headerlink" href="#research-log" title="Permalink to this heading">#</a></h2>
+<section id="mlflow-model-registry-api">
+<h3>MLflow Model Registry エイリアス API<a class="headerlink" href="#mlflow-model-registry-api" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Context</strong>: Req 9 でチャンピオン/チャレンジャー管理に使用するため API を確認</p></li>
+<li><p><strong>Sources Consulted</strong>:</p>
+<ul>
+<li><p>MLflow 2.8.0 リリースノート (https://mlflow.org/news/2023/10/29/2.8.0-release/)</p></li>
+<li><p>MLflow Python API リファレンス (https://mlflow.org/docs/latest/python_api/mlflow.client.html)</p></li>
+<li><p>MLflow モデルロードガイド (https://mlflow.org/docs/latest/getting-started/registering-first-model/step3-load-model/)</p></li>
+</ul>
+</li>
+<li><p><strong>Findings</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">MlflowClient.set_registered_model_alias(name:</span> <span class="pre">str,</span> <span class="pre">alias:</span> <span class="pre">str,</span> <span class="pre">version:</span> <span class="pre">str)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MlflowClient.get_model_version_by_alias(name:</span> <span class="pre">str,</span> <span class="pre">alias:</span> <span class="pre">str)</span> <span class="pre">-&gt;</span> <span class="pre">ModelVersion</span></code></p></li>
+<li><p>ロードURIは <code class="docutils literal notranslate"><span class="pre">models:/モデル名&#64;エイリアス名</span></code> 形式</p></li>
+<li><p>1 バージョンに複数エイリアスを付与可能（旧 Stages とは異なり柔軟）</p></li>
+<li><p>エイリアス削除: <code class="docutils literal notranslate"><span class="pre">MlflowClient.delete_registered_model_alias(name,</span> <span class="pre">alias)</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Implications</strong>: チュートリアルで使用する MLflow バージョンは <strong>2.8.0 以上</strong>に固定する。<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">mlflow&gt;=2.8.0</span></code> を requirements に明記する</p></li>
+</ul>
+</section>
+<section id="jupyter-book">
+<h3>Jupyter Book バージョン選定<a class="headerlink" href="#jupyter-book" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Context</strong>: Req 5 が <code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> / <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code> を明示しているため、対応バージョンを確認</p></li>
+<li><p><strong>Sources Consulted</strong>:</p>
+<ul>
+<li><p>Jupyter Book 公式サイト (https://jupyterbook.org/)</p></li>
+<li><p>MyST Markdown 実行ガイド (https://mystmd.org/guide/execute-notebooks)</p></li>
+</ul>
+</li>
+<li><p><strong>Findings</strong>:</p>
+<ul>
+<li><p>Jupyter Book 2.0（2025年初頭リリース）は <code class="docutils literal notranslate"><span class="pre">myst.yml</span></code> に完全移行し <code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> / <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code> を廃止</p></li>
+<li><p>Jupyter Book 0.15.x（1.x 系）が <code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> + <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code> をサポートする最後の安定版</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">execute_notebooks:</span> <span class="pre">off</span></code> の設定キーは <code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> の <code class="docutils literal notranslate"><span class="pre">execute</span></code> セクションに記述</p></li>
+<li><p>v2 へのアップグレードは <code class="docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">book</span> <span class="pre">build</span></code> 実行時に自動移行プロンプトが出る</p></li>
+</ul>
+</li>
+<li><p><strong>Implications</strong>: <strong>Jupyter Book 0.15.x を採用</strong>。v2 への移行パスは「発展的な話題」として補足説明に留める</p></li>
+</ul>
+</section>
+<section id="github-actions-github-pages">
+<h3>GitHub Actions による GitHub Pages デプロイ<a class="headerlink" href="#github-actions-github-pages" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Context</strong>: Req 6 の自動デプロイワークフロー設計</p></li>
+<li><p><strong>Sources Consulted</strong>: Jupyter Book GitHub Pages ガイド (https://jupyterbook.org/en/stable/publish/gh-pages.html)</p></li>
+<li><p><strong>Findings</strong>:</p>
+<ul>
+<li><p>標準フロー: ① パッケージインストール → ② <code class="docutils literal notranslate"><span class="pre">jupyter-book</span> <span class="pre">build</span> <span class="pre">.</span></code> → ③ <code class="docutils literal notranslate"><span class="pre">ghp-import</span></code> または <code class="docutils literal notranslate"><span class="pre">actions/deploy-pages</span></code> でデプロイ</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">execute_notebooks:</span> <span class="pre">off</span></code> を <code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> に設定することで CI 上でのノートブック再実行を回避</p></li>
+<li><p>ノートブックの出力はリポジトリにコミット済みとして扱う（pre-executed 方式）</p></li>
+</ul>
+</li>
+<li><p><strong>Implications</strong>: <code class="docutils literal notranslate"><span class="pre">execute_notebooks:</span> <span class="pre">&quot;off&quot;</span></code> を <code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> に明記し、開発者はローカルでノートブックを実行してから <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code> する運用とする</p></li>
+</ul>
+</section>
+<section id="fastapi-mlflow">
+<h3>FastAPI + MLflow モデルサービング<a class="headerlink" href="#fastapi-mlflow" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Context</strong>: Req 10 のチャンピオンモデル推論 API 設計</p></li>
+<li><p><strong>Sources Consulted</strong>: FastAPI lifespan イベントドキュメント (https://fastapi.tiangolo.com/advanced/events/)</p></li>
+<li><p><strong>Findings</strong>:</p>
+<ul>
+<li><p>FastAPI 0.93+ の <code class="docutils literal notranslate"><span class="pre">lifespan</span></code> コンテキストマネージャーがモデルロードに最適（旧 <code class="docutils literal notranslate"><span class="pre">&#64;app.on_event(&quot;startup&quot;)</span></code> より推奨）</p></li>
+<li><p>MLflow Python クライアントは同期 API のみ提供。<code class="docutils literal notranslate"><span class="pre">asyncio.to_thread()</span></code> を使えば非同期ハンドラーからも安全に呼び出せる</p></li>
+<li><p>MLflow 2.x に PR #14307（2025年1月）で FastAPI ベースのサーバーが追加されたが、<code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">models</span> <span class="pre">serve</span></code> コマンド向けであり、カスタム FastAPI アプリとは別物</p></li>
+</ul>
+</li>
+<li><p><strong>Implications</strong>: アプリ起動時に <code class="docutils literal notranslate"><span class="pre">lifespan</span></code> でモデルをロードし、<code class="docutils literal notranslate"><span class="pre">app.state.model</span></code> に格納してハンドラーから参照するパターンを採用する</p></li>
+</ul>
+</section>
+<section id="conda">
+<h3>conda オフラインインストール<a class="headerlink" href="#conda" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Context</strong>: Req 7・8 のオフライン環境セットアップ</p></li>
+<li><p><strong>Sources Consulted</strong>: conda カスタムチャンネルドキュメント (https://docs.conda.io/projects/conda/en/stable/user-guide/tasks/create-custom-channels.html)</p></li>
+<li><p><strong>Findings</strong>:</p>
+<ul>
+<li><p>ローカルチャンネルの構造: プラットフォームごとのサブディレクトリ（<code class="docutils literal notranslate"><span class="pre">linux-64/</span></code>, <code class="docutils literal notranslate"><span class="pre">osx-arm64/</span></code> 等）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">index</span> <span class="pre">/path/to/channel</span></code> で <code class="docutils literal notranslate"><span class="pre">repodata.json</span></code> を生成</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">file:///path/to/channel</span> <span class="pre">パッケージ名</span></code> または <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">./my-channel</span> <span class="pre">パッケージ名</span></code></p></li>
+<li><p>pip の代替: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">download</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span> <span class="pre">-d</span> <span class="pre">./wheels</span></code> → <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--no-index</span> <span class="pre">--find-links=./wheels</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Implications</strong>: チュートリアルでは <strong>pip wheel 方式をメイン</strong>（シンプルで conda 依存なし）、conda channel 方式を補足として説明する</p></li>
+</ul>
+</section>
+<section id="optuna-mlflow">
+<h3>Optuna + MLflow 統合パターン<a class="headerlink" href="#optuna-mlflow" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Context</strong>: Req 4 でハイパーパラメータ最適化に Optuna を統合するため設計を調査</p></li>
+<li><p><strong>Findings</strong>:</p>
+<ul>
+<li><p>Optuna の <code class="docutils literal notranslate"><span class="pre">objective</span></code> 関数内で <code class="docutils literal notranslate"><span class="pre">mlflow.start_run(nested=True)</span></code> を呼ぶことで trial ごとに子 run を作成できる</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parent_run</span></code> で <code class="docutils literal notranslate"><span class="pre">study.optimize()</span></code> 全体を囲むと MLflow UI で study → trial の階層表示が可能</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TPESampler</span></code> はデフォルトで <code class="docutils literal notranslate"><span class="pre">seed</span></code> を固定可能（<code class="docutils literal notranslate"><span class="pre">TPESampler(seed=42)</span></code>）→ 再現性確保</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">study.best_trial.number</span></code> から best trial の MLflow run ID を <code class="docutils literal notranslate"><span class="pre">search_runs()</span></code> で逆引きできる</p></li>
+<li><p>Optuna は外部サービスに依存しない純粋 Python ライブラリ。オフライン動作と完全に整合する</p></li>
+</ul>
+</li>
+<li><p><strong>Implications</strong>: <code class="docutils literal notranslate"><span class="pre">nested=True</span></code> パターンを標準とし、study 全体を1つの親 run で管理する設計を採用する</p></li>
+</ul>
+</section>
+</section>
+<section id="architecture-pattern-evaluation">
+<h2>Architecture Pattern Evaluation<a class="headerlink" href="#architecture-pattern-evaluation" title="Permalink to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>説明</p></th>
+<th class="head"><p>強み</p></th>
+<th class="head"><p>制約 / リスク</p></th>
+<th class="head"><p>採用可否</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>シングルプロセス（ファイルベース）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">./mlruns</span></code> をそのまま使い、Webアプリと同プロセス内でモデルロード</p></td>
+<td><p>セットアップ最小</p></td>
+<td><p>ファイルパス依存・マルチサーバー構成に拡張できない</p></td>
+<td><p>学習フェーズのみで採用</p></td>
+</tr>
+<tr class="row-odd"><td><p>2プロセス（ネットワーク経由）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">server</span></code> を別ターミナルで起動し、アプリは <code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI</span></code> で接続</p></td>
+<td><p>本番構成に近い・役割分担が明確</p></td>
+<td><p>セットアップ手順が増える</p></td>
+<td><p>デプロイフェーズで採用</p></td>
+</tr>
+<tr class="row-even"><td><p>Docker Compose</p></td>
+<td><p>コンテナで役割分担</p></td>
+<td><p>再現性最高</p></td>
+<td><p>Docker 使用不可</p></td>
+<td><p><strong>不採用</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="design-decisions">
+<h2>Design Decisions<a class="headerlink" href="#design-decisions" title="Permalink to this heading">#</a></h2>
+<section id="decision-jupyter-book-0-15-x">
+<h3>Decision: Jupyter Book バージョンを 0.15.x に固定する<a class="headerlink" href="#decision-jupyter-book-0-15-x" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Context</strong>: v2.0 が最新だが、要件が <code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> / <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code> を明示</p></li>
+<li><p><strong>Alternatives Considered</strong>:</p>
+<ol class="arabic simple">
+<li><p>Jupyter Book 0.15.x（1.x 系）— <code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> + <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code></p></li>
+<li><p>Jupyter Book 2.0（MyST）— <code class="docutils literal notranslate"><span class="pre">myst.yml</span></code></p></li>
+</ol>
+</li>
+<li><p><strong>Selected Approach</strong>: 0.15.x を採用し、バージョンを <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> に <code class="docutils literal notranslate"><span class="pre">jupyter-book&gt;=0.15,&lt;1.0</span></code> で固定</p></li>
+<li><p><strong>Rationale</strong>: 要件の記述と一致し、ドキュメントや事例が豊富。v2 への移行は今後の拡張として扱う</p></li>
+<li><p><strong>Trade-offs</strong>: v2 の新機能は使えないが、チュートリアルの目的（MLflow 学習）には十分</p></li>
+</ul>
+</section>
+<section id="decision-web-fastapi">
+<h3>Decision: Webアプリフレームワークを FastAPI に決定する<a class="headerlink" href="#decision-web-fastapi" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Context</strong>: Req 10 が「FastAPI または Streamlit」と提示</p></li>
+<li><p><strong>Alternatives Considered</strong>:</p>
+<ol class="arabic simple">
+<li><p>FastAPI — REST API、<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/predict</span></code>、<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/health</span></code></p></li>
+<li><p>Streamlit — GUI ダッシュボード形式</p></li>
+</ol>
+</li>
+<li><p><strong>Selected Approach</strong>: FastAPI を primary、Streamlit を補足サンプルとして位置づける</p></li>
+<li><p><strong>Rationale</strong>: <code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/predict</span></code> の REST エンドポイントがマルチサーバー構成・curl テストと相性が良い。Streamlit は UI 確認用として参考に残す</p></li>
+<li><p><strong>Trade-offs</strong>: FastAPI は uvicorn の起動が必要で Streamlit より手順が多い。ただし本番デプロイパターンとして教育的価値が高い</p></li>
+</ul>
+</section>
+<section id="decision-pre-executed">
+<h3>Decision: ノートブック実行方式を pre-executed（出力コミット）に固定する<a class="headerlink" href="#decision-pre-executed" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Context</strong>: Req 6.2 の CI 上での再実行回避とオフライン運用の両立</p></li>
+<li><p><strong>Alternatives Considered</strong>:</p>
+<ol class="arabic simple">
+<li><p>pre-executed — ローカルで実行した出力を <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> にコミット</p></li>
+<li><p>CI 実行 — GitHub Actions 上でノートブックを実行</p></li>
+</ol>
+</li>
+<li><p><strong>Selected Approach</strong>: pre-executed 方式。<code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> に <code class="docutils literal notranslate"><span class="pre">execute_notebooks:</span> <span class="pre">&quot;off&quot;</span></code> を設定</p></li>
+<li><p><strong>Rationale</strong>: オフライン環境での MLflow サーバー依存・データセット依存を CI 上で解決する必要がなくなる。CI はビルド（HTML 変換）のみに集中できる</p></li>
+<li><p><strong>Trade-offs</strong>: 開発者がノートブック出力を最新に保つ責任を持つ必要がある</p></li>
+</ul>
+</section>
+</section>
+<section id="risks-mitigations">
+<h2>Risks &amp; Mitigations<a class="headerlink" href="#risks-mitigations" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>MLflow バージョン非互換</strong> — エイリアス API は 2.8.0 以降。<code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> でバージョンを <code class="docutils literal notranslate"><span class="pre">mlflow&gt;=2.8.0</span></code> と明示し、古い環境でのエラーメッセージを「はじめに」ページに記載する</p></li>
+<li><p><strong>ノートブック出力の陳腐化</strong> — pre-executed 方式では出力が古くなるリスクがある。README に「ノートブック更新時は再実行してコミットすること」を明記する</p></li>
+<li><p><strong>マルチサーバー間の接続失敗</strong> — <code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI</span></code> の設定ミスが最多原因。Webアプリの起動時ヘルスチェックでエラーを早期検出し、接続先 URI を標準出力に表示する</p></li>
+<li><p><strong>PyTorch の合成データ生成の再現性</strong> — <code class="docutils literal notranslate"><span class="pre">torch.manual_seed()</span></code> を全ノートブックで設定して出力を固定する</p></li>
+</ul>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://mlflow.org/news/2023/10/29/2.8.0-release/">MLflow 2.8.0 リリースノート</a> — エイリアス機能の導入バージョン確認</p></li>
+<li><p><a class="reference external" href="https://mlflow.org/docs/latest/python_api/mlflow.client.html">MLflow MlflowClient API</a> — <code class="docutils literal notranslate"><span class="pre">set_registered_model_alias</span></code> シグネチャ</p></li>
+<li><p><a class="reference external" href="https://jupyterbook.org/en/stable/">Jupyter Book 公式</a> — <code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> / <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code> 構成</p></li>
+<li><p><a class="reference external" href="https://fastapi.tiangolo.com/advanced/events/">FastAPI Lifespan Events</a> — モデルロードパターン</p></li>
+<li><p><a class="reference external" href="https://docs.conda.io/projects/conda/en/stable/user-guide/tasks/create-custom-channels.html">conda Custom Channels</a> — オフラインインストール手順</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./.kiro/specs/mlflow-tutorial"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#research-log">Research Log</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow-model-registry-api">MLflow Model Registry エイリアス API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter-book">Jupyter Book バージョン選定</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#github-actions-github-pages">GitHub Actions による GitHub Pages デプロイ</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fastapi-mlflow">FastAPI + MLflow モデルサービング</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conda">conda オフラインインストール</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optuna-mlflow">Optuna + MLflow 統合パターン</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-pattern-evaluation">Architecture Pattern Evaluation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#design-decisions">Design Decisions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-jupyter-book-0-15-x">Decision: Jupyter Book バージョンを 0.15.x に固定する</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-web-fastapi">Decision: Webアプリフレームワークを FastAPI に決定する</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#decision-pre-executed">Decision: ノートブック実行方式を pre-executed（出力コミット）に固定する</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#risks-mitigations">Risks &amp; Mitigations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

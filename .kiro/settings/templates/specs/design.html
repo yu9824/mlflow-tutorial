@@ -1,0 +1,1028 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Design Document Template &#8212; MLflow Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/clipboard.min.js"></script>
+    <script src="../../../../_static/copybutton.js"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '.kiro/settings/templates/specs/design';</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MLflow Tutorial</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/01_concepts/mlflow_overview.html">MLflow 概要 — 4つのコンポーネント</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/02_sklearn/sklearn_autolog.html">scikit-learn × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/03_pytorch/pytorch_tracking.html">PyTorch × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/04_experiment_management/hyperparam_search.html">ハイパーパラメータ探索と実験比較</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/05_champion_challenger/champion_challenger.html">チャンピオン/チャレンジャーモデル管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notebooks/06_deployment/fastapi_serving.html">FastAPI による MLflow チャンピオンモデルのサービング</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial/issues/new?title=Issue%20on%20page%20%2F.kiro/settings/templates/specs/design.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/.kiro/settings/templates/specs/design.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Design Document Template</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#warning-approaching-1000-lines-indicates-excessive-feature-complexity-that-may-require-design-simplification"><strong>Warning</strong>: Approaching 1000 lines indicates excessive feature complexity that may require design simplification.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-goals">Non-Goals</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#existing-architecture-analysis-if-applicable">Existing Architecture Analysis (if applicable)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-pattern-boundary-map">Architecture Pattern &amp; Boundary Map</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technology-stack">Technology Stack</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#system-flows">System Flows</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-traceability">Requirements Traceability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#components-and-interfaces">Components and Interfaces</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-layer">[Domain / Layer]</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#component-name">[Component Name]</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#service-interface">Service Interface</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#api-contract">API Contract</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#event-contract">Event Contract</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-job-contract">Batch / Job Contract</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#state-management">State Management</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-model">Domain Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logical-data-model">Logical Data Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#physical-data-model">Physical Data Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-contracts-integration">Data Contracts &amp; Integration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-handling">Error Handling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-strategy">Error Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-categories-and-responses">Error Categories and Responses</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring">Monitoring</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-strategy">Testing Strategy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#default-sections-adapt-names-sections-to-fit-the-domain">Default sections (adapt names/sections to fit the domain)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-sections-include-when-relevant">Optional Sections (include when relevant)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#security-considerations">Security Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-scalability">Performance &amp; Scalability</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#migration-strategy">Migration Strategy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supporting-references-optional">Supporting References (Optional)</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="design-document-template">
+<h1>Design Document Template<a class="headerlink" href="#design-document-template" title="Permalink to this heading">#</a></h1>
+<hr class="docutils" />
+<p><strong>Purpose</strong>: Provide sufficient detail to ensure implementation consistency across different implementers, preventing interpretation drift.</p>
+<p><strong>Approach</strong>:</p>
+<ul class="simple">
+<li><p>Include essential sections that directly inform implementation decisions</p></li>
+<li><p>Omit optional sections unless critical to preventing implementation errors</p></li>
+<li><p>Match detail level to feature complexity</p></li>
+<li><p>Use diagrams and tables over lengthy prose</p></li>
+</ul>
+<section id="warning-approaching-1000-lines-indicates-excessive-feature-complexity-that-may-require-design-simplification">
+<h2><strong>Warning</strong>: Approaching 1000 lines indicates excessive feature complexity that may require design simplification.<a class="headerlink" href="#warning-approaching-1000-lines-indicates-excessive-feature-complexity-that-may-require-design-simplification" title="Permalink to this heading">#</a></h2>
+<blockquote>
+<div><p>Sections may be reordered (e.g., surfacing Requirements Traceability earlier or moving Data Models nearer Architecture) when it improves clarity. Within each section, keep the flow <strong>Summary → Scope → Decisions → Impacts/Risks</strong> so reviewers can scan consistently.</p>
+</div></blockquote>
+</section>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<p>2-3 paragraphs max
+<strong>Purpose</strong>: This feature delivers [specific value] to [target users].
+<strong>Users</strong>: [Target user groups] will utilize this for [specific workflows].
+<strong>Impact</strong> (if applicable): Changes the current [system state] by [specific modifications].</p>
+<section id="goals">
+<h3>Goals<a class="headerlink" href="#goals" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Primary objective 1</p></li>
+<li><p>Primary objective 2</p></li>
+<li><p>Success criteria</p></li>
+</ul>
+</section>
+<section id="non-goals">
+<h3>Non-Goals<a class="headerlink" href="#non-goals" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Explicitly excluded functionality</p></li>
+<li><p>Future considerations outside current scope</p></li>
+<li><p>Integration points deferred</p></li>
+</ul>
+</section>
+</section>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this heading">#</a></h2>
+<blockquote>
+<div><p>Reference detailed discovery notes in <code class="docutils literal notranslate"><span class="pre">research.md</span></code> only for background; keep design.md self-contained for reviewers by capturing all decisions and contracts here.
+Capture key decisions in text and let diagrams carry structural detail—avoid repeating the same information in prose.</p>
+</div></blockquote>
+<section id="existing-architecture-analysis-if-applicable">
+<h3>Existing Architecture Analysis (if applicable)<a class="headerlink" href="#existing-architecture-analysis-if-applicable" title="Permalink to this heading">#</a></h3>
+<p>When modifying existing systems:</p>
+<ul class="simple">
+<li><p>Current architecture patterns and constraints</p></li>
+<li><p>Existing domain boundaries to be respected</p></li>
+<li><p>Integration points that must be maintained</p></li>
+<li><p>Technical debt addressed or worked around</p></li>
+</ul>
+</section>
+<section id="architecture-pattern-boundary-map">
+<h3>Architecture Pattern &amp; Boundary Map<a class="headerlink" href="#architecture-pattern-boundary-map" title="Permalink to this heading">#</a></h3>
+<p><strong>RECOMMENDED</strong>: Include Mermaid diagram showing the chosen architecture pattern and system boundaries (required for complex features, optional for simple additions)</p>
+<p><strong>Architecture Integration</strong>:</p>
+<ul class="simple">
+<li><p>Selected pattern: [name and brief rationale]</p></li>
+<li><p>Domain/feature boundaries: [how responsibilities are separated to avoid conflicts]</p></li>
+<li><p>Existing patterns preserved: [list key patterns]</p></li>
+<li><p>New components rationale: [why each is needed]</p></li>
+<li><p>Steering compliance: [principles maintained]</p></li>
+</ul>
+</section>
+<section id="technology-stack">
+<h3>Technology Stack<a class="headerlink" href="#technology-stack" title="Permalink to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Layer</p></th>
+<th class="head"><p>Choice / Version</p></th>
+<th class="head"><p>Role in Feature</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Frontend / CLI</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>Backend / Services</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>Data / Storage</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>Messaging / Events</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>Infrastructure / Runtime</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<div><p>Keep rationale concise here and, when more depth is required (trade-offs, benchmarks), add a short summary plus pointer to the Supporting References section and <code class="docutils literal notranslate"><span class="pre">research.md</span></code> for raw investigation notes.</p>
+</div></blockquote>
+</section>
+</section>
+<section id="system-flows">
+<h2>System Flows<a class="headerlink" href="#system-flows" title="Permalink to this heading">#</a></h2>
+<p>Provide only the diagrams needed to explain non-trivial flows. Use pure Mermaid syntax. Common patterns:</p>
+<ul class="simple">
+<li><p>Sequence (multi-party interactions)</p></li>
+<li><p>Process / state (branching logic or lifecycle)</p></li>
+<li><p>Data / event flow (pipelines, async messaging)</p></li>
+</ul>
+<p>Skip this section entirely for simple CRUD changes.</p>
+<blockquote>
+<div><p>Describe flow-level decisions (e.g., gating conditions, retries) briefly after the diagram instead of restating each step.</p>
+</div></blockquote>
+</section>
+<section id="requirements-traceability">
+<h2>Requirements Traceability<a class="headerlink" href="#requirements-traceability" title="Permalink to this heading">#</a></h2>
+<p>Use this section for complex or compliance-sensitive features where requirements span multiple domains. Straightforward 1:1 mappings can rely on the Components summary table.</p>
+<p>Map each requirement ID (e.g., <code class="docutils literal notranslate"><span class="pre">2.1</span></code>) to the design elements that realize it.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Requirement</p></th>
+<th class="head"><p>Summary</p></th>
+<th class="head"><p>Components</p></th>
+<th class="head"><p>Interfaces</p></th>
+<th class="head"><p>Flows</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1.1</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>1.2</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<div><p>Omit this section only when a single component satisfies a single requirement without cross-cutting concerns.</p>
+</div></blockquote>
+</section>
+<section id="components-and-interfaces">
+<h2>Components and Interfaces<a class="headerlink" href="#components-and-interfaces" title="Permalink to this heading">#</a></h2>
+<p>Provide a quick reference before diving into per-component details.</p>
+<ul>
+<li><p>Summaries can be a table or compact list. Example table:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Domain/Layer</p></th>
+<th class="head"><p>Intent</p></th>
+<th class="head"><p>Req Coverage</p></th>
+<th class="head"><p>Key Dependencies (P0/P1)</p></th>
+<th class="head"><p>Contracts</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ExampleComponent</p></td>
+<td><p>UI</p></td>
+<td><p>Displays XYZ</p></td>
+<td><p>1, 2</p></td>
+<td><p>GameProvider (P0), MapPanel (P1)</p></td>
+<td><p>Service, State</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><p>Only components introducing new boundaries (e.g., logic hooks, external integrations, persistence) require full detail blocks. Simple presentation components can rely on the summary row plus a short Implementation Note.</p></li>
+</ul>
+<p>Group detailed blocks by domain or architectural layer. For each detailed component, list requirement IDs as <code class="docutils literal notranslate"><span class="pre">2.1,</span> <span class="pre">2.3</span></code> (omit “Requirement”). When multiple UI components share the same contract, reference a base interface/props definition instead of duplicating code blocks.</p>
+<section id="domain-layer">
+<h3>[Domain / Layer]<a class="headerlink" href="#domain-layer" title="Permalink to this heading">#</a></h3>
+<section id="component-name">
+<h4>[Component Name]<a class="headerlink" href="#component-name" title="Permalink to this heading">#</a></h4>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Intent</p></td>
+<td><p>1-line description of the responsibility</p></td>
+</tr>
+<tr class="row-odd"><td><p>Requirements</p></td>
+<td><p>2.1, 2.3</p></td>
+</tr>
+<tr class="row-even"><td><p>Owner / Reviewers</p></td>
+<td><p>(optional)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Responsibilities &amp; Constraints</strong></p>
+<ul class="simple">
+<li><p>Primary responsibility</p></li>
+<li><p>Domain boundary and transaction scope</p></li>
+<li><p>Data ownership / invariants</p></li>
+</ul>
+<p><strong>Dependencies</strong></p>
+<ul class="simple">
+<li><p>Inbound: Component/service name — purpose (Criticality)</p></li>
+<li><p>Outbound: Component/service name — purpose (Criticality)</p></li>
+<li><p>External: Service/library — purpose (Criticality)</p></li>
+</ul>
+<p>Summarize external dependency findings here; deeper investigation (API signatures, rate limits, migration notes) lives in <code class="docutils literal notranslate"><span class="pre">research.md</span></code>.</p>
+<p><strong>Contracts</strong>: Service [ ] / API [ ] / Event [ ] / Batch [ ] / State [ ]  ← check only the ones that apply.</p>
+<section id="service-interface">
+<h5>Service Interface<a class="headerlink" href="#service-interface" title="Permalink to this heading">#</a></h5>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span><span class="w"> </span><span class="p">[</span><span class="nx">ComponentName</span><span class="p">]</span><span class="nx">Service</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">methodName</span><span class="p">(</span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="kt">InputType</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">Result</span><span class="o">&lt;</span><span class="nx">OutputType</span><span class="p">,</span><span class="w"> </span><span class="nx">ErrorType</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Preconditions:</p></li>
+<li><p>Postconditions:</p></li>
+<li><p>Invariants:</p></li>
+</ul>
+</section>
+<section id="api-contract">
+<h5>API Contract<a class="headerlink" href="#api-contract" title="Permalink to this heading">#</a></h5>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Endpoint</p></th>
+<th class="head"><p>Request</p></th>
+<th class="head"><p>Response</p></th>
+<th class="head"><p>Errors</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>POST</p></td>
+<td><p>/api/resource</p></td>
+<td><p>CreateRequest</p></td>
+<td><p>Resource</p></td>
+<td><p>400, 409, 500</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="event-contract">
+<h5>Event Contract<a class="headerlink" href="#event-contract" title="Permalink to this heading">#</a></h5>
+<ul class="simple">
+<li><p>Published events:</p></li>
+<li><p>Subscribed events:</p></li>
+<li><p>Ordering / delivery guarantees:</p></li>
+</ul>
+</section>
+<section id="batch-job-contract">
+<h5>Batch / Job Contract<a class="headerlink" href="#batch-job-contract" title="Permalink to this heading">#</a></h5>
+<ul class="simple">
+<li><p>Trigger:</p></li>
+<li><p>Input / validation:</p></li>
+<li><p>Output / destination:</p></li>
+<li><p>Idempotency &amp; recovery:</p></li>
+</ul>
+</section>
+<section id="state-management">
+<h5>State Management<a class="headerlink" href="#state-management" title="Permalink to this heading">#</a></h5>
+<ul class="simple">
+<li><p>State model:</p></li>
+<li><p>Persistence &amp; consistency:</p></li>
+<li><p>Concurrency strategy:</p></li>
+</ul>
+<p><strong>Implementation Notes</strong></p>
+<ul class="simple">
+<li><p>Integration:</p></li>
+<li><p>Validation:</p></li>
+<li><p>Risks:</p></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+<section id="data-models">
+<h2>Data Models<a class="headerlink" href="#data-models" title="Permalink to this heading">#</a></h2>
+<p>Focus on the portions of the data landscape that change with this feature.</p>
+<section id="domain-model">
+<h3>Domain Model<a class="headerlink" href="#domain-model" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Aggregates and transactional boundaries</p></li>
+<li><p>Entities, value objects, domain events</p></li>
+<li><p>Business rules &amp; invariants</p></li>
+<li><p>Optional Mermaid diagram for complex relationships</p></li>
+</ul>
+</section>
+<section id="logical-data-model">
+<h3>Logical Data Model<a class="headerlink" href="#logical-data-model" title="Permalink to this heading">#</a></h3>
+<p><strong>Structure Definition</strong>:</p>
+<ul class="simple">
+<li><p>Entity relationships and cardinality</p></li>
+<li><p>Attributes and their types</p></li>
+<li><p>Natural keys and identifiers</p></li>
+<li><p>Referential integrity rules</p></li>
+</ul>
+<p><strong>Consistency &amp; Integrity</strong>:</p>
+<ul class="simple">
+<li><p>Transaction boundaries</p></li>
+<li><p>Cascading rules</p></li>
+<li><p>Temporal aspects (versioning, audit)</p></li>
+</ul>
+</section>
+<section id="physical-data-model">
+<h3>Physical Data Model<a class="headerlink" href="#physical-data-model" title="Permalink to this heading">#</a></h3>
+<p><strong>When to include</strong>: When implementation requires specific storage design decisions</p>
+<p><strong>For Relational Databases</strong>:</p>
+<ul class="simple">
+<li><p>Table definitions with data types</p></li>
+<li><p>Primary/foreign keys and constraints</p></li>
+<li><p>Indexes and performance optimizations</p></li>
+<li><p>Partitioning strategy for scale</p></li>
+</ul>
+<p><strong>For Document Stores</strong>:</p>
+<ul class="simple">
+<li><p>Collection structures</p></li>
+<li><p>Embedding vs referencing decisions</p></li>
+<li><p>Sharding key design</p></li>
+<li><p>Index definitions</p></li>
+</ul>
+<p><strong>For Event Stores</strong>:</p>
+<ul class="simple">
+<li><p>Event schema definitions</p></li>
+<li><p>Stream aggregation strategies</p></li>
+<li><p>Snapshot policies</p></li>
+<li><p>Projection definitions</p></li>
+</ul>
+<p><strong>For Key-Value/Wide-Column Stores</strong>:</p>
+<ul class="simple">
+<li><p>Key design patterns</p></li>
+<li><p>Column families or value structures</p></li>
+<li><p>TTL and compaction strategies</p></li>
+</ul>
+</section>
+<section id="data-contracts-integration">
+<h3>Data Contracts &amp; Integration<a class="headerlink" href="#data-contracts-integration" title="Permalink to this heading">#</a></h3>
+<p><strong>API Data Transfer</strong></p>
+<ul class="simple">
+<li><p>Request/response schemas</p></li>
+<li><p>Validation rules</p></li>
+<li><p>Serialization format (JSON, Protobuf, etc.)</p></li>
+</ul>
+<p><strong>Event Schemas</strong></p>
+<ul class="simple">
+<li><p>Published event structures</p></li>
+<li><p>Schema versioning strategy</p></li>
+<li><p>Backward/forward compatibility rules</p></li>
+</ul>
+<p><strong>Cross-Service Data Management</strong></p>
+<ul class="simple">
+<li><p>Distributed transaction patterns (Saga, 2PC)</p></li>
+<li><p>Data synchronization strategies</p></li>
+<li><p>Eventual consistency handling</p></li>
+</ul>
+<p>Skip subsections that are not relevant to this feature.</p>
+</section>
+</section>
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this heading">#</a></h2>
+<section id="error-strategy">
+<h3>Error Strategy<a class="headerlink" href="#error-strategy" title="Permalink to this heading">#</a></h3>
+<p>Concrete error handling patterns and recovery mechanisms for each error type.</p>
+</section>
+<section id="error-categories-and-responses">
+<h3>Error Categories and Responses<a class="headerlink" href="#error-categories-and-responses" title="Permalink to this heading">#</a></h3>
+<p><strong>User Errors</strong> (4xx): Invalid input → field-level validation; Unauthorized → auth guidance; Not found → navigation help
+<strong>System Errors</strong> (5xx): Infrastructure failures → graceful degradation; Timeouts → circuit breakers; Exhaustion → rate limiting<br />
+<strong>Business Logic Errors</strong> (422): Rule violations → condition explanations; State conflicts → transition guidance</p>
+<p><strong>Process Flow Visualization</strong> (when complex business logic exists):
+Include Mermaid flowchart only for complex error scenarios with business workflows.</p>
+</section>
+<section id="monitoring">
+<h3>Monitoring<a class="headerlink" href="#monitoring" title="Permalink to this heading">#</a></h3>
+<p>Error tracking, logging, and health monitoring implementation.</p>
+</section>
+</section>
+<section id="testing-strategy">
+<h2>Testing Strategy<a class="headerlink" href="#testing-strategy" title="Permalink to this heading">#</a></h2>
+<section id="default-sections-adapt-names-sections-to-fit-the-domain">
+<h3>Default sections (adapt names/sections to fit the domain)<a class="headerlink" href="#default-sections-adapt-names-sections-to-fit-the-domain" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Unit Tests: 3–5 items from core functions/modules (e.g., auth methods, subscription logic)</p></li>
+<li><p>Integration Tests: 3–5 cross-component flows (e.g., webhook handling, notifications)</p></li>
+<li><p>E2E/UI Tests (if applicable): 3–5 critical user paths (e.g., forms, dashboards)</p></li>
+<li><p>Performance/Load (if applicable): 3–4 items (e.g., concurrency, high-volume ops)</p></li>
+</ul>
+</section>
+</section>
+<section id="optional-sections-include-when-relevant">
+<h2>Optional Sections (include when relevant)<a class="headerlink" href="#optional-sections-include-when-relevant" title="Permalink to this heading">#</a></h2>
+<section id="security-considerations">
+<h3>Security Considerations<a class="headerlink" href="#security-considerations" title="Permalink to this heading">#</a></h3>
+<p><em>Use this section for features handling auth, sensitive data, external integrations, or user permissions. Capture only decisions unique to this feature; defer baseline controls to steering docs.</em></p>
+<ul class="simple">
+<li><p>Threat modeling, security controls, compliance requirements</p></li>
+<li><p>Authentication and authorization patterns</p></li>
+<li><p>Data protection and privacy considerations</p></li>
+</ul>
+</section>
+<section id="performance-scalability">
+<h3>Performance &amp; Scalability<a class="headerlink" href="#performance-scalability" title="Permalink to this heading">#</a></h3>
+<p><em>Use this section when performance targets, high load, or scaling concerns exist. Record only feature-specific targets or trade-offs and rely on steering documents for general practices.</em></p>
+<ul class="simple">
+<li><p>Target metrics and measurement strategies</p></li>
+<li><p>Scaling approaches (horizontal/vertical)</p></li>
+<li><p>Caching strategies and optimization techniques</p></li>
+</ul>
+</section>
+<section id="migration-strategy">
+<h3>Migration Strategy<a class="headerlink" href="#migration-strategy" title="Permalink to this heading">#</a></h3>
+<p>Include a Mermaid flowchart showing migration phases when schema/data movement is required.</p>
+<ul class="simple">
+<li><p>Phase breakdown, rollback triggers, validation checkpoints</p></li>
+</ul>
+</section>
+</section>
+<section id="supporting-references-optional">
+<h2>Supporting References (Optional)<a class="headerlink" href="#supporting-references-optional" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Create this section only when keeping the information in the main body would hurt readability (e.g., very long TypeScript definitions, vendor option matrices, exhaustive schema tables). Keep decision-making context in the main sections so the design stays self-contained.</p></li>
+<li><p>Link to the supporting references from the main text instead of inlining large snippets.</p></li>
+<li><p>Background research notes and comparisons continue to live in <code class="docutils literal notranslate"><span class="pre">research.md</span></code>, but their conclusions must be summarized in the main design.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./.kiro/settings/templates/specs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#warning-approaching-1000-lines-indicates-excessive-feature-complexity-that-may-require-design-simplification"><strong>Warning</strong>: Approaching 1000 lines indicates excessive feature complexity that may require design simplification.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-goals">Non-Goals</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#existing-architecture-analysis-if-applicable">Existing Architecture Analysis (if applicable)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-pattern-boundary-map">Architecture Pattern &amp; Boundary Map</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technology-stack">Technology Stack</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#system-flows">System Flows</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-traceability">Requirements Traceability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#components-and-interfaces">Components and Interfaces</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-layer">[Domain / Layer]</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#component-name">[Component Name]</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#service-interface">Service Interface</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#api-contract">API Contract</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#event-contract">Event Contract</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-job-contract">Batch / Job Contract</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#state-management">State Management</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-model">Domain Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#logical-data-model">Logical Data Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#physical-data-model">Physical Data Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-contracts-integration">Data Contracts &amp; Integration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-handling">Error Handling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-strategy">Error Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-categories-and-responses">Error Categories and Responses</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring">Monitoring</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-strategy">Testing Strategy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#default-sections-adapt-names-sections-to-fit-the-domain">Default sections (adapt names/sections to fit the domain)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-sections-include-when-relevant">Optional Sections (include when relevant)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#security-considerations">Security Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-scalability">Performance &amp; Scalability</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#migration-strategy">Migration Strategy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supporting-references-optional">Supporting References (Optional)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

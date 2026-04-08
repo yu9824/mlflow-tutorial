@@ -1,0 +1,1188 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>チャンピオン/チャレンジャーモデル管理 &#8212; MLflow Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/05_champion_challenger/champion_challenger';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="FastAPI による MLflow チャンピオンモデルのサービング" href="../06_deployment/fastapi_serving.html" />
+    <link rel="prev" title="ハイパーパラメータ探索と実験比較" href="../04_experiment_management/hyperparam_search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MLflow Tutorial</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../01_concepts/mlflow_overview.html">MLflow 概要 — 4つのコンポーネント</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_sklearn/sklearn_autolog.html">scikit-learn × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_pytorch/pytorch_tracking.html">PyTorch × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_experiment_management/hyperparam_search.html">ハイパーパラメータ探索と実験比較</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">チャンピオン/チャレンジャーモデル管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_deployment/fastapi_serving.html">FastAPI による MLflow チャンピオンモデルのサービング</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial/issues/new?title=Issue%20on%20page%20%2Fnotebooks/05_champion_challenger/champion_challenger.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/notebooks/05_champion_challenger/champion_challenger.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>チャンピオン/チャレンジャーモデル管理</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">前提条件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">学習目標</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">チャンピオン/チャレンジャーパターンとは</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">ライフサイクル図</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">エイリアスの役割</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">1. セットアップとインポート</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">2. データ準備</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">3. 2つのモデルの学習と登録</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-6-1">4. エイリアスの付与（Task 6.1）</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">エイリアスAPIのポイント</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uri">エイリアスURIを使ったモデルロード</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">登録済みモデルバージョンの一覧確認</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-6-2">5. 昇格ロジックの実装（Task 6.2）</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">昇格の手順</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">昇格判定と実行</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">昇格後の検証</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">6. ロールバック手順</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">7. エイリアスAPI リファレンス</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">バージョン要件</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">エイリアスURIの形式</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">まとめ</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">学んだこと</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">ポイント</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">次のステップ</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="id1">
+<h1>チャンピオン/チャレンジャーモデル管理<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<section id="id2">
+<h2>前提条件<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>このノートブックを実行する前に、以下の条件を確認してください。</p>
+<ul class="simple">
+<li><p><strong>環境</strong>: conda仮想環境 <code class="docutils literal notranslate"><span class="pre">mlflow-tutorial</span></code> がアクティブになっていること</p></li>
+<li><p><strong>MLflowバージョン</strong>: <code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">&gt;=</span> <span class="pre">2.8.0</span></code>（エイリアスAPIが利用可能なバージョン）</p></li>
+<li><p><strong>Model Registry</strong>: モデル <code class="docutils literal notranslate"><span class="pre">&quot;IrisClassifier&quot;</span></code> が Model Registry に登録済みであること（<code class="docutils literal notranslate"><span class="pre">02_sklearn</span></code> ノートブック完了後）</p></li>
+<li><p><strong>Tracking Server</strong>: ローカルの <code class="docutils literal notranslate"><span class="pre">./mlruns</span></code> ディレクトリが存在すること</p></li>
+</ul>
+<blockquote>
+<div><p><strong>注意</strong>: このノートブック自体がモデルの登録も行うため、<code class="docutils literal notranslate"><span class="pre">IrisClassifier</span></code> が未登録でも実行可能です。セットアップセルで新たにバージョンを登録します。</p>
+</div></blockquote>
+</section>
+<section id="id3">
+<h2>学習目標<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>このノートブックを完了すると、以下のことができるようになります。</p>
+<ol class="arabic simple">
+<li><p>MLflow 2.8.0 以降のエイリアスAPI（<code class="docutils literal notranslate"><span class="pre">set_registered_model_alias</span></code>）を使って <code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> / <code class="docutils literal notranslate"><span class="pre">&#64;challenger</span></code> エイリアスを付与できる</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">models:/ModelName&#64;champion</span></code> 形式のURIでモデルをロードできる</p></li>
+<li><p>メトリクスを比較してチャレンジャーをチャンピオンに昇格させるロジックを実装できる</p></li>
+<li><p>昇格後のロールバック手順を理解し、<code class="docutils literal notranslate"><span class="pre">&#64;archived</span></code> エイリアスで旧チャンピオンを保持できる</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_model_version_by_alias()</span></code> でエイリアスの状態を検証できる</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="id4">
+<h2>チャンピオン/チャレンジャーパターンとは<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>本番環境では「今最も良いモデル（チャンピオン）」と「新しく試したいモデル（チャレンジャー）」を明確に区別して管理することが重要です。MLflow のエイリアス機能を使うと、バージョン番号に依存せずにロール（役割）ベースでモデルを参照できます。</p>
+<section id="id5">
+<h3>ライフサイクル図<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────────┐
+│           チャンピオン/チャレンジャー管理ライフサイクル               │
+└─────────────────────────────────────────────────────────────────┘
+
+  新モデル学習
+      │
+      ▼
+  ┌──────────┐      ┌──────────────┐
+  │  モデル   │─────▶│ @challenger  │
+  │  登録     │      │  エイリアス付与 │
+  └──────────┘      └──────────────┘
+                            │
+                            ▼
+                    ┌──────────────┐
+                    │  メトリクス   │
+                    │  比較・評価   │
+                    └──────────────┘
+                     │            │
+              チャレンジャー勝利  チャンピオン維持
+                     │            │
+                     ▼            ▼
+             ┌──────────────┐  ┌──────────────┐
+             │  @champion   │  │  @champion   │
+             │  更新（昇格） │  │  変更なし    │
+             └──────────────┘  └──────────────┘
+                     │
+                     ▼
+             ┌──────────────┐
+             │  旧champion  │
+             │  @archived   │  ← ロールバック可能
+             └──────────────┘
+
+登録 → チャレンジャー評価 → 昇格判定 → チャンピオン更新 → ロールバック可能
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h3>エイリアスの役割<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>エイリアス</p></th>
+<th class="head text-center"><p>役割</p></th>
+<th class="head text-left"><p>説明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code></p></td>
+<td class="text-center"><p>現行本番モデル</p></td>
+<td class="text-left"><p>アプリケーションが実際に使用するモデル</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">&#64;challenger</span></code></p></td>
+<td class="text-center"><p>評価中モデル</p></td>
+<td class="text-left"><p>チャンピオンと比較中の新モデル</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">&#64;archived</span></code></p></td>
+<td class="text-center"><p>アーカイブ済み</p></td>
+<td class="text-left"><p>旧チャンピオン（ロールバック用に保持）</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="id7">
+<h2>1. セットアップとインポート<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mlflow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mlflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">MlflowClient</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_iris</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">GradientBoostingClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span>
+
+<span class="c1"># 再現性のためシードを固定</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># ローカルTracking URIを設定（オフライン実行可能）</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="s2">&quot;./mlruns&quot;</span><span class="p">)</span>
+
+<span class="n">MODEL_NAME</span> <span class="o">=</span> <span class="s2">&quot;IrisClassifier&quot;</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MLflow version: </span><span class="si">{</span><span class="n">mlflow</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tracking URI: </span><span class="si">{</span><span class="n">mlflow</span><span class="o">.</span><span class="n">get_tracking_uri</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MLflow version: 2.11.1
+Tracking URI: ./mlruns
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id8">
+<h2>2. データ準備<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">sklearn.datasets</span></code> に内蔵されているアイリスデータセットを使用します。外部データのダウンロードは不要です。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># アイリスデータセットを読み込む（ダウンロード不要）</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;データセット: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="si">}</span><span class="s2">サンプル, </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">特徴量, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">))</span><span class="si">}</span><span class="s2">クラス&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;訓練データ: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="si">}</span><span class="s2">サンプル&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;テストデータ: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="si">}</span><span class="s2">サンプル&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>データセット: 150サンプル, 4特徴量, 3クラス
+訓練データ: 120サンプル
+テストデータ: 30サンプル
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id9">
+<h2>3. 2つのモデルの学習と登録<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h2>
+<p>チャンピオン/チャレンジャーパターンを示すために、2つの異なるモデルを学習して Model Registry に登録します。</p>
+<ul class="simple">
+<li><p><strong>バージョン1</strong>: <code class="docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code>（チャンピオン候補）</p></li>
+<li><p><strong>バージョン2</strong>: <code class="docutils literal notranslate"><span class="pre">GradientBoostingClassifier</span></code>（チャレンジャー候補）</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- バージョン1: RandomForestClassifier（チャンピオン候補） ---</span>
+<span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="s2">&quot;champion_v1&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">run1</span><span class="p">:</span>
+    <span class="n">clf1</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">clf1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">acc1</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">clf1</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_param</span><span class="p">(</span><span class="s2">&quot;model_type&quot;</span><span class="p">,</span> <span class="s2">&quot;RandomForest&quot;</span><span class="p">)</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_param</span><span class="p">(</span><span class="s2">&quot;n_estimators&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span> <span class="n">acc1</span><span class="p">)</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span><span class="n">clf1</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">)</span>
+    <span class="n">run1_id</span> <span class="o">=</span> <span class="n">run1</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span>
+
+<span class="n">mv1</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">register_model</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;runs:/</span><span class="si">{</span><span class="n">run1_id</span><span class="si">}</span><span class="s2">/model&quot;</span><span class="p">,</span> <span class="n">MODEL_NAME</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Version 1 registered: v</span><span class="si">{</span><span class="n">mv1</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">, accuracy=</span><span class="si">{</span><span class="n">acc1</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># --- バージョン2: GradientBoostingClassifier（チャレンジャー候補） ---</span>
+<span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="s2">&quot;challenger_v2&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">run2</span><span class="p">:</span>
+    <span class="n">clf2</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">(</span>
+        <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+    <span class="p">)</span>
+    <span class="n">clf2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">acc2</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">clf2</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_param</span><span class="p">(</span><span class="s2">&quot;model_type&quot;</span><span class="p">,</span> <span class="s2">&quot;GradientBoosting&quot;</span><span class="p">)</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_param</span><span class="p">(</span><span class="s2">&quot;n_estimators&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_param</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span> <span class="n">acc2</span><span class="p">)</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span><span class="n">clf2</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">)</span>
+    <span class="n">run2_id</span> <span class="o">=</span> <span class="n">run2</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span>
+
+<span class="n">mv2</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">register_model</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;runs:/</span><span class="si">{</span><span class="n">run2_id</span><span class="si">}</span><span class="s2">/model&quot;</span><span class="p">,</span> <span class="n">MODEL_NAME</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Version 2 registered: v</span><span class="si">{</span><span class="n">mv2</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">, accuracy=</span><span class="si">{</span><span class="n">acc2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Successfully registered model &#39;IrisClassifier&#39;.
+2024/01/15 10:23:45 INFO mlflow.tracking._tracking_service.client: 🏃 View run champion_v1 at: http://127.0.0.1:5000/#/experiments/1/runs/a1b2c3d4e5f6
+Created version &#39;1&#39; of model &#39;IrisClassifier&#39;.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Version 1 registered: v1, accuracy=1.0000
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Registered model &#39;IrisClassifier&#39; already exists. Creating a new version of this model...
+2024/01/15 10:23:52 INFO mlflow.tracking._tracking_service.client: 🏃 View run challenger_v2 at: http://127.0.0.1:5000/#/experiments/1/runs/b2c3d4e5f6a1
+Created version &#39;2&#39; of model &#39;IrisClassifier&#39;.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Version 2 registered: v2, accuracy=1.0000
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="task-6-1">
+<h2>4. エイリアスの付与（Task 6.1）<a class="headerlink" href="#task-6-1" title="Permalink to this heading">#</a></h2>
+<p>MLflow 2.8.0 以降では、<code class="docutils literal notranslate"><span class="pre">MlflowClient.set_registered_model_alias()</span></code> を使ってモデルバージョンにエイリアス（別名）を付与できます。</p>
+<section id="api">
+<h3>エイリアスAPIのポイント<a class="headerlink" href="#api" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>エイリアスはモデル名とバージョン番号の<strong>組み合わせに対して付与</strong>する</p></li>
+<li><p>1つのバージョンに複数のエイリアスを付与できる</p></li>
+<li><p>エイリアスは<strong>モデル名スコープ内でユニーク</strong>（同じエイリアスを別バージョンに付与すると上書きされる）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">models:/ModelName&#64;alias</span></code> 形式のURIでロード可能</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MLflow 2.8.0以降のエイリアスAPI</span>
+<span class="c1"># バージョン1をチャンピオン、バージョン2をチャレンジャーとして設定</span>
+<span class="n">client</span><span class="o">.</span><span class="n">set_registered_model_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;champion&quot;</span><span class="p">,</span> <span class="n">mv1</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">set_registered_model_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;challenger&quot;</span><span class="p">,</span> <span class="n">mv2</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;@champion -&gt; v</span><span class="si">{</span><span class="n">mv1</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> (RandomForest)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;@challenger -&gt; v</span><span class="si">{</span><span class="n">mv2</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> (GradientBoosting)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>@champion -&gt; v1 (RandomForest)
+@challenger -&gt; v2 (GradientBoosting)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="uri">
+<h3>エイリアスURIを使ったモデルロード<a class="headerlink" href="#uri" title="Permalink to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">models:/ModelName&#64;alias</span></code> 形式のURIを使うことで、バージョン番号を直接指定せずにモデルをロードできます。これにより、アプリケーションのコードを変更せずにチャンピオンモデルを切り替えられます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># @champion エイリアスURIでモデルをロード（バージョン番号不要）</span>
+<span class="n">champion_uri</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;models:/</span><span class="si">{</span><span class="n">MODEL_NAME</span><span class="si">}</span><span class="s2">@champion&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;チャンピオンモデルURI: </span><span class="si">{</span><span class="n">champion_uri</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">champion_model</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">champion_uri</span><span class="p">)</span>
+
+<span class="c1"># テストデータの最初の3サンプルで推論</span>
+<span class="n">preds</span> <span class="o">=</span> <span class="n">champion_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Champion predictions: </span><span class="si">{</span><span class="n">preds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># クラス名に変換して確認</span>
+<span class="n">iris_target_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;setosa&quot;</span><span class="p">,</span> <span class="s2">&quot;versicolor&quot;</span><span class="p">,</span> <span class="s2">&quot;virginica&quot;</span><span class="p">]</span>
+<span class="n">pred_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">iris_target_names</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">preds</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;クラス名: </span><span class="si">{</span><span class="n">iris_target_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;予測クラス: </span><span class="si">{</span><span class="n">pred_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>チャンピオンモデルURI: models:/IrisClassifier@champion
+Champion predictions: [2 1 0]
+クラス名: [&#39;setosa&#39;, &#39;versicolor&#39;, &#39;virginica&#39;]
+予測クラス: [&#39;virginica&#39;, &#39;versicolor&#39;, &#39;setosa&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id10">
+<h3>登録済みモデルバージョンの一覧確認<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">search_model_versions()</span></code> を使って、現在登録されているすべてのバージョンとエイリアスを確認できます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 全バージョンとエイリアスを一覧表示</span>
+<span class="n">all_versions</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_model_versions</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;name=&#39;</span><span class="si">{</span><span class="n">MODEL_NAME</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;=== </span><span class="si">{</span><span class="n">MODEL_NAME</span><span class="si">}</span><span class="s2"> の登録バージョン一覧 ===&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">mv</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_versions</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">version</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">バージョン v</span><span class="si">{</span><span class="n">mv</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  run_id  : </span><span class="si">{</span><span class="n">mv</span><span class="o">.</span><span class="n">run_id</span><span class="p">[:</span><span class="mi">12</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  aliases : </span><span class="si">{</span><span class="n">mv</span><span class="o">.</span><span class="n">aliases</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== IrisClassifier の登録バージョン一覧 ===
+
+バージョン v1
+  run_id  : a1b2c3d4e5f6
+  aliases : [&#39;champion&#39;]
+
+バージョン v2
+  run_id  : b2c3d4e5f6a1
+  aliases : [&#39;challenger&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="task-6-2">
+<h2>5. 昇格ロジックの実装（Task 6.2）<a class="headerlink" href="#task-6-2" title="Permalink to this heading">#</a></h2>
+<p>チャレンジャーとチャンピオンのメトリクスをプログラムで比較し、チャレンジャーが優秀であれば自動的に昇格させます。</p>
+<section id="id11">
+<h3>昇格の手順<a class="headerlink" href="#id11" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">get_model_version_by_alias()</span></code> でチャンピオン/チャレンジャーのバージョン情報を取得</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_run()</span></code> で対応するRunのメトリクスを取得</p></li>
+<li><p>メトリクスを比較して昇格判定</p></li>
+<li><p>昇格する場合: <code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> を新バージョンに更新、旧チャンピオンを <code class="docutils literal notranslate"><span class="pre">&#64;archived</span></code> へ移行</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ステップ1: エイリアスでモデルバージョン情報を取得</span>
+<span class="n">champion_mv</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_model_version_by_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;champion&quot;</span><span class="p">)</span>
+<span class="n">challenger_mv</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_model_version_by_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;challenger&quot;</span><span class="p">)</span>
+
+<span class="c1"># ステップ2: 対応するRunからメトリクスを取得</span>
+<span class="n">champion_run</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="n">champion_mv</span><span class="o">.</span><span class="n">run_id</span><span class="p">)</span>
+<span class="n">challenger_run</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="n">challenger_mv</span><span class="o">.</span><span class="n">run_id</span><span class="p">)</span>
+
+<span class="n">champion_acc</span> <span class="o">=</span> <span class="n">champion_run</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span>
+<span class="n">challenger_acc</span> <span class="o">=</span> <span class="n">challenger_run</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span>
+
+<span class="c1"># Runのタグからモデルタイプを取得（ログしたパラメータから）</span>
+<span class="n">champion_type</span> <span class="o">=</span> <span class="n">champion_run</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model_type&quot;</span><span class="p">,</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">)</span>
+<span class="n">challenger_type</span> <span class="o">=</span> <span class="n">challenger_run</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model_type&quot;</span><span class="p">,</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== メトリクス比較 ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Champion accuracy:   </span><span class="si">{</span><span class="n">champion_acc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (v</span><span class="si">{</span><span class="n">champion_mv</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">champion_type</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Challenger accuracy: </span><span class="si">{</span><span class="n">challenger_acc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (v</span><span class="si">{</span><span class="n">challenger_mv</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">challenger_type</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== メトリクス比較 ===
+Champion accuracy:   1.0000 (v1, RandomForest)
+Challenger accuracy: 1.0000 (v2, GradientBoosting)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id12">
+<h3>昇格判定と実行<a class="headerlink" href="#id12" title="Permalink to this heading">#</a></h3>
+<p>チャレンジャーの精度がチャンピオンを上回った場合、以下の操作を行います。</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアスをチャレンジャーバージョンに付け替える</p></li>
+<li><p>旧チャンピオンに <code class="docutils literal notranslate"><span class="pre">&#64;archived</span></code> エイリアスを付与（ロールバック用に保持）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;challenger</span></code> エイリアスを削除（評価完了のため）</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ステップ3: 昇格判定</span>
+<span class="n">diff</span> <span class="o">=</span> <span class="n">challenger_acc</span> <span class="o">-</span> <span class="n">champion_acc</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">差分: </span><span class="si">{</span><span class="n">diff</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">（チャレンジャー - チャンピオン）&quot;</span><span class="p">)</span>
+
+<span class="c1"># 同スコアでもチャレンジャーを優先する場合は &gt;= を使用</span>
+<span class="c1"># より厳密な評価では統計的有意差を確認することを推奨</span>
+<span class="k">if</span> <span class="n">challenger_acc</span> <span class="o">&gt;=</span> <span class="n">champion_acc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Challenger wins! Promoting...&quot;</span><span class="p">)</span>
+
+    <span class="c1"># @champion を新バージョン（チャレンジャー）に更新</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">set_registered_model_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;champion&quot;</span><span class="p">,</span> <span class="n">challenger_mv</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+
+    <span class="c1"># 旧チャンピオンを @archived に移行（ロールバック用に保持）</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">set_registered_model_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;archived&quot;</span><span class="p">,</span> <span class="n">champion_mv</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+
+    <span class="c1"># @challenger エイリアスを削除（評価フェーズ完了）</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">delete_registered_model_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;challenger&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  @champion -&gt; v</span><span class="si">{</span><span class="n">challenger_mv</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">challenger_type</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  @archived -&gt; v</span><span class="si">{</span><span class="n">champion_mv</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">champion_type</span><span class="si">}</span><span class="s2">, 旧チャンピオン)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  @challenger エイリアスを削除しました&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Champion holds position.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  @champion は v</span><span class="si">{</span><span class="n">champion_mv</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> のままです&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>差分: +0.0000（チャレンジャー - チャンピオン）
+
+Challenger wins! Promoting...
+  @champion -&gt; v2 (GradientBoosting)
+  @archived -&gt; v1 (RandomForest, 旧チャンピオン)
+  @challenger エイリアスを削除しました
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id13">
+<h3>昇格後の検証<a class="headerlink" href="#id13" title="Permalink to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">get_model_version_by_alias()</span></code> を使って、エイリアスが正しく更新されたことをアサーションで確認します。これは本番環境での昇格スクリプトに組み込むことを推奨します。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># アサーション: @champion が正しく更新されたことを確認</span>
+<span class="n">new_champion</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_model_version_by_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;champion&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">new_champion</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="n">challenger_mv</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;昇格失敗！@champion は v</span><span class="si">{</span><span class="n">new_champion</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> ですが、&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="n">challenger_mv</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> になるはずです&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># アサーション: @archived に旧チャンピオンが保存されていることを確認</span>
+<span class="n">archived</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_model_version_by_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;archived&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">archived</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="n">champion_mv</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;アーカイブ失敗！@archived は v</span><span class="si">{</span><span class="n">archived</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> ですが、&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;v</span><span class="si">{</span><span class="n">champion_mv</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> になるはずです&quot;</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== 昇格後の検証 ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[OK] @champion は v</span><span class="si">{</span><span class="n">new_champion</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> になりました&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[OK] @archived には v</span><span class="si">{</span><span class="n">archived</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> が保存されています（ロールバック用）&quot;</span><span class="p">)</span>
+
+<span class="c1"># 最終状態を一覧で確認</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== 最終エイリアス状態 ===&quot;</span><span class="p">)</span>
+<span class="n">all_versions</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_model_versions</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;name=&#39;</span><span class="si">{</span><span class="n">MODEL_NAME</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">mv</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_versions</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">version</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;バージョン v</span><span class="si">{</span><span class="n">mv</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">: aliases=</span><span class="si">{</span><span class="n">mv</span><span class="o">.</span><span class="n">aliases</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">昇格が正常に完了しました！&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== 昇格後の検証 ===
+
+[OK] @champion は v2 になりました
+[OK] @archived には v1 が保存されています（ロールバック用）
+
+=== 最終エイリアス状態 ===
+バージョン v1: aliases=[&#39;archived&#39;]
+バージョン v2: aliases=[&#39;champion&#39;]
+
+昇格が正常に完了しました！
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="id14">
+<h2>6. ロールバック手順<a class="headerlink" href="#id14" title="Permalink to this heading">#</a></h2>
+<p>新しいチャンピオンで問題が発生した場合、<code class="docutils literal notranslate"><span class="pre">&#64;archived</span></code> に保存されている旧チャンピオンに素早くロールバックできます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ロールバック手順のデモ</span>
+<span class="c1"># 実際の本番環境では問題を検知した際にこのコードを実行する</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== ロールバック手順（デモ） ===&quot;</span><span class="p">)</span>
+
+<span class="n">current_champion</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_model_version_by_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;champion&quot;</span><span class="p">)</span>
+<span class="n">archived_version</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_model_version_by_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;archived&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">現在の @champion: v</span><span class="si">{</span><span class="n">current_champion</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ロールバック先 @archived: v</span><span class="si">{</span><span class="n">archived_version</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ロールバックを実行します...&quot;</span><span class="p">)</span>
+
+<span class="c1"># @champion を旧バージョン（@archived）に戻す</span>
+<span class="n">client</span><span class="o">.</span><span class="n">set_registered_model_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;champion&quot;</span><span class="p">,</span> <span class="n">archived_version</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+
+<span class="c1"># @archived エイリアスを削除（ロールバック完了後はクリーンアップ）</span>
+<span class="n">client</span><span class="o">.</span><span class="n">delete_registered_model_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;archived&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  @champion -&gt; v</span><span class="si">{</span><span class="n">archived_version</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> に戻しました&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  @archived エイリアスを削除しました&quot;</span><span class="p">)</span>
+
+<span class="c1"># ロールバック確認</span>
+<span class="n">rolled_back</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_model_version_by_alias</span><span class="p">(</span><span class="n">MODEL_NAME</span><span class="p">,</span> <span class="s2">&quot;champion&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">rolled_back</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="n">archived_version</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="s2">&quot;ロールバック失敗！&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[OK] ロールバック完了。@champion は v</span><span class="si">{</span><span class="n">rolled_back</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> です&quot;</span><span class="p">)</span>
+
+<span class="c1"># 最終状態確認</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== ロールバック後のエイリアス状態 ===&quot;</span><span class="p">)</span>
+<span class="n">all_versions</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_model_versions</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;name=&#39;</span><span class="si">{</span><span class="n">MODEL_NAME</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">mv</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_versions</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">version</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;バージョン v</span><span class="si">{</span><span class="n">mv</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">: aliases=</span><span class="si">{</span><span class="n">mv</span><span class="o">.</span><span class="n">aliases</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== ロールバック手順（デモ） ===
+
+現在の @champion: v2
+ロールバック先 @archived: v1
+
+ロールバックを実行します...
+  @champion -&gt; v1 に戻しました
+  @archived エイリアスを削除しました
+
+[OK] ロールバック完了。@champion は v1 です
+
+=== ロールバック後のエイリアス状態 ===
+バージョン v1: aliases=[&#39;champion&#39;]
+バージョン v2: aliases=[]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id15">
+<h2>7. エイリアスAPI リファレンス<a class="headerlink" href="#id15" title="Permalink to this heading">#</a></h2>
+<p>本ノートブックで使用したエイリアス関連APIをまとめます。</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>API</p></th>
+<th class="head text-left"><p>説明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">client.set_registered_model_alias(name,</span> <span class="pre">alias,</span> <span class="pre">version)</span></code></p></td>
+<td class="text-left"><p>エイリアスを付与・更新する</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">client.get_model_version_by_alias(name,</span> <span class="pre">alias)</span></code></p></td>
+<td class="text-left"><p>エイリアスでモデルバージョン情報を取得する</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">client.delete_registered_model_alias(name,</span> <span class="pre">alias)</span></code></p></td>
+<td class="text-left"><p>エイリアスを削除する</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">client.search_model_versions(filter_string)</span></code></p></td>
+<td class="text-left"><p>条件でモデルバージョンを検索する</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">client.get_run(run_id)</span></code></p></td>
+<td class="text-left"><p>Run情報（メトリクス・パラメータ）を取得する</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">mlflow.pyfunc.load_model(&quot;models:/Name&#64;alias&quot;)</span></code></p></td>
+<td class="text-left"><p>エイリアスURIでモデルをロードする</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="id16">
+<h3>バージョン要件<a class="headerlink" href="#id16" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># エイリアスAPIはMLflow 2.8.0以降で利用可能</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mlflow</span>
+<span class="k">assert</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">__version__</span> <span class="o">&gt;=</span> <span class="s2">&quot;2.8.0&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;MLflow &gt;= 2.8.0 が必要です（現在: </span><span class="si">{</span><span class="n">mlflow</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">）&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="id17">
+<h3>エイリアスURIの形式<a class="headerlink" href="#id17" title="Permalink to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">models</span><span class="p">:</span><span class="o">//</span><span class="p">{</span><span class="n">モデル名</span><span class="p">}</span><span class="o">@</span><span class="p">{</span><span class="n">エイリアス名</span><span class="p">}</span>
+
+<span class="n">例</span><span class="p">:</span>
+  <span class="n">models</span><span class="p">:</span><span class="o">/</span><span class="n">IrisClassifier</span><span class="nd">@champion</span>    <span class="c1"># チャンピオンモデル</span>
+  <span class="n">models</span><span class="p">:</span><span class="o">/</span><span class="n">IrisClassifier</span><span class="nd">@challenger</span>  <span class="c1"># チャレンジャーモデル</span>
+  <span class="n">models</span><span class="p">:</span><span class="o">/</span><span class="n">IrisClassifier</span><span class="nd">@archived</span>    <span class="c1"># アーカイブ済みモデル</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>参考</strong>: バージョン番号でも同様にロードできます（例: <code class="docutils literal notranslate"><span class="pre">models:/IrisClassifier/1</span></code>）。ただし、エイリアスを使うことでコードを変更せずにモデルを切り替えられます。</p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="id18">
+<h2>まとめ<a class="headerlink" href="#id18" title="Permalink to this heading">#</a></h2>
+<p>このノートブックでは、MLflow のエイリアスAPIを使ったチャンピオン/チャレンジャーモデル管理を学びました。</p>
+<section id="id19">
+<h3>学んだこと<a class="headerlink" href="#id19" title="Permalink to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>学習項目</p></th>
+<th class="head text-left"><p>使用したAPI</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>エイリアスの付与</p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MlflowClient.set_registered_model_alias()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>エイリアスURIでのロード</p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">mlflow.pyfunc.load_model(&quot;models:/Name&#64;alias&quot;)</span></code></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>メトリクス比較</p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">search_model_versions()</span></code> + <code class="docutils literal notranslate"><span class="pre">get_run()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>チャンピオン昇格</p></td>
+<td class="text-left"><p>エイリアスの付け替え</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>ロールバック</p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">&#64;archived</span></code> エイリアスからの復元</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>昇格検証</p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">get_model_version_by_alias()</span></code> + <code class="docutils literal notranslate"><span class="pre">assert</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id20">
+<h3>ポイント<a class="headerlink" href="#id20" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>エイリアスはバージョン番号の抽象化</strong>: アプリケーションのコードを変更せずにモデルを切り替えられる</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">&#64;archived</span></code> によるロールバック保証</strong>: 昇格前に旧チャンピオンを保存しておくことで、問題発生時に即時ロールバックできる</p></li>
+<li><p><strong>アサーションによる検証</strong>: 自動化スクリプトではエイリアス更新後に必ず検証を行うことを推奨</p></li>
+<li><p><strong>MLflow 2.8.0 以降が必要</strong>: 旧バージョンの <code class="docutils literal notranslate"><span class="pre">stages</span></code>（Staging/Production）は非推奨。エイリアスへの移行を推奨</p></li>
+</ul>
+</section>
+<section id="id21">
+<h3>次のステップ<a class="headerlink" href="#id21" title="Permalink to this heading">#</a></h3>
+<p>次のノートブックでは、<code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアスを使って本番環境に FastAPI Webアプリケーションとしてデプロイする方法を学びます。</p>
+<hr class="docutils" />
+<p><strong>次へ</strong>: <span class="xref myst">06_deployment - FastAPIによるモデルデプロイ</span></p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "mlflow-tutorial"
+        },
+        kernelOptions: {
+            name: "mlflow-tutorial",
+            path: "./notebooks/05_champion_challenger"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'mlflow-tutorial'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../04_experiment_management/hyperparam_search.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">ハイパーパラメータ探索と実験比較</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../06_deployment/fastapi_serving.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">FastAPI による MLflow チャンピオンモデルのサービング</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">前提条件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">学習目標</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">チャンピオン/チャレンジャーパターンとは</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">ライフサイクル図</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">エイリアスの役割</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">1. セットアップとインポート</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">2. データ準備</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">3. 2つのモデルの学習と登録</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-6-1">4. エイリアスの付与（Task 6.1）</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api">エイリアスAPIのポイント</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uri">エイリアスURIを使ったモデルロード</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">登録済みモデルバージョンの一覧確認</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-6-2">5. 昇格ロジックの実装（Task 6.2）</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">昇格の手順</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">昇格判定と実行</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">昇格後の検証</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">6. ロールバック手順</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">7. エイリアスAPI リファレンス</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">バージョン要件</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">エイリアスURIの形式</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">まとめ</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">学んだこと</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">ポイント</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">次のステップ</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

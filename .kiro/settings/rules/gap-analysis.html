@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Gap Analysis Process &#8212; MLflow Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '.kiro/settings/rules/gap-analysis';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MLflow Tutorial</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/01_concepts/mlflow_overview.html">MLflow 概要 — 4つのコンポーネント</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/02_sklearn/sklearn_autolog.html">scikit-learn × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/03_pytorch/pytorch_tracking.html">PyTorch × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/04_experiment_management/hyperparam_search.html">ハイパーパラメータ探索と実験比較</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/05_champion_challenger/champion_challenger.html">チャンピオン/チャレンジャーモデル管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/06_deployment/fastapi_serving.html">FastAPI による MLflow チャンピオンモデルのサービング</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial/issues/new?title=Issue%20on%20page%20%2F.kiro/settings/rules/gap-analysis.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/.kiro/settings/rules/gap-analysis.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Gap Analysis Process</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objective">Objective</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis-framework">Analysis Framework</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#current-state-investigation">1. Current State Investigation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-feasibility-analysis">2. Requirements Feasibility Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-approach-options">3. Implementation Approach Options</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#option-a-extend-existing-components">Option A: Extend Existing Components</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#option-b-create-new-components">Option B: Create New Components</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#option-c-hybrid-approach">Option C: Hybrid Approach</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#out-of-scope-for-gap-analysis">4. Out-of-Scope for Gap Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-complexity-risk">5. Implementation Complexity &amp; Risk</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#output-checklist">Output Checklist</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#principles">Principles</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="gap-analysis-process">
+<h1>Gap Analysis Process<a class="headerlink" href="#gap-analysis-process" title="Permalink to this heading">#</a></h1>
+<section id="objective">
+<h2>Objective<a class="headerlink" href="#objective" title="Permalink to this heading">#</a></h2>
+<p>Analyze the gap between requirements and existing codebase to inform implementation strategy decisions.</p>
+</section>
+<section id="analysis-framework">
+<h2>Analysis Framework<a class="headerlink" href="#analysis-framework" title="Permalink to this heading">#</a></h2>
+<section id="current-state-investigation">
+<h3>1. Current State Investigation<a class="headerlink" href="#current-state-investigation" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Scan for domain-related assets:</p>
+<ul>
+<li><p>Key files/modules and directory layout</p></li>
+<li><p>Reusable components/services/utilities</p></li>
+<li><p>Dominant architecture patterns and constraints</p></li>
+</ul>
+</li>
+<li><p>Extract conventions:</p>
+<ul>
+<li><p>Naming, layering, dependency direction</p></li>
+<li><p>Import/export patterns and dependency hotspots</p></li>
+<li><p>Testing placement and approach</p></li>
+</ul>
+</li>
+<li><p>Note integration surfaces:</p>
+<ul>
+<li><p>Data models/schemas, API clients, auth mechanisms</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="requirements-feasibility-analysis">
+<h3>2. Requirements Feasibility Analysis<a class="headerlink" href="#requirements-feasibility-analysis" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>From EARS requirements, list technical needs:</p>
+<ul>
+<li><p>Data models, APIs/services, UI/components</p></li>
+<li><p>Business rules/validation</p></li>
+<li><p>Non-functionals: security, performance, scalability, reliability</p></li>
+</ul>
+</li>
+<li><p>Identify gaps and constraints:</p>
+<ul>
+<li><p>Missing capabilities in current codebase</p></li>
+<li><p>Unknowns to be researched later (mark as “Research Needed”)</p></li>
+<li><p>Constraints from existing architecture and patterns</p></li>
+</ul>
+</li>
+<li><p>Note complexity signals:</p>
+<ul>
+<li><p>Simple CRUD / algorithmic logic / workflows / external integrations</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="implementation-approach-options">
+<h3>3. Implementation Approach Options<a class="headerlink" href="#implementation-approach-options" title="Permalink to this heading">#</a></h3>
+<section id="option-a-extend-existing-components">
+<h4>Option A: Extend Existing Components<a class="headerlink" href="#option-a-extend-existing-components" title="Permalink to this heading">#</a></h4>
+<p><strong>When to consider</strong>: Feature fits naturally into existing structure</p>
+<ul class="simple">
+<li><p><strong>Which files/modules to extend</strong>:</p>
+<ul>
+<li><p>Identify specific files requiring changes</p></li>
+<li><p>Assess impact on existing functionality</p></li>
+<li><p>Evaluate backward compatibility concerns</p></li>
+</ul>
+</li>
+<li><p><strong>Compatibility assessment</strong>:</p>
+<ul>
+<li><p>Check if extension respects existing interfaces</p></li>
+<li><p>Verify no breaking changes to consumers</p></li>
+<li><p>Assess test coverage impact</p></li>
+</ul>
+</li>
+<li><p><strong>Complexity and maintainability</strong>:</p>
+<ul>
+<li><p>Evaluate cognitive load of additional functionality</p></li>
+<li><p>Check if single responsibility principle is maintained</p></li>
+<li><p>Assess if file size remains manageable</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Trade-offs</strong>:</p>
+<ul class="simple">
+<li><p>✅ Minimal new files, faster initial development</p></li>
+<li><p>✅ Leverages existing patterns and infrastructure</p></li>
+<li><p>❌ Risk of bloating existing components</p></li>
+<li><p>❌ May complicate existing logic</p></li>
+</ul>
+</section>
+<section id="option-b-create-new-components">
+<h4>Option B: Create New Components<a class="headerlink" href="#option-b-create-new-components" title="Permalink to this heading">#</a></h4>
+<p><strong>When to consider</strong>: Feature has distinct responsibility or existing components are already complex</p>
+<ul class="simple">
+<li><p><strong>Rationale for new creation</strong>:</p>
+<ul>
+<li><p>Clear separation of concerns justifies new file</p></li>
+<li><p>Existing components are already complex</p></li>
+<li><p>Feature has distinct lifecycle or dependencies</p></li>
+</ul>
+</li>
+<li><p><strong>Integration points</strong>:</p>
+<ul>
+<li><p>How new components connect to existing system</p></li>
+<li><p>APIs or interfaces exposed</p></li>
+<li><p>Dependencies on existing components</p></li>
+</ul>
+</li>
+<li><p><strong>Responsibility boundaries</strong>:</p>
+<ul>
+<li><p>Clear definition of what new component owns</p></li>
+<li><p>Interfaces with existing components</p></li>
+<li><p>Data flow and control flow</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Trade-offs</strong>:</p>
+<ul class="simple">
+<li><p>✅ Clean separation of concerns</p></li>
+<li><p>✅ Easier to test in isolation</p></li>
+<li><p>✅ Reduces complexity in existing components</p></li>
+<li><p>❌ More files to navigate</p></li>
+<li><p>❌ Requires careful interface design</p></li>
+</ul>
+</section>
+<section id="option-c-hybrid-approach">
+<h4>Option C: Hybrid Approach<a class="headerlink" href="#option-c-hybrid-approach" title="Permalink to this heading">#</a></h4>
+<p><strong>When to consider</strong>: Complex features requiring both extension and new creation</p>
+<ul class="simple">
+<li><p><strong>Combination strategy</strong>:</p>
+<ul>
+<li><p>Which parts extend existing components</p></li>
+<li><p>Which parts warrant new components</p></li>
+<li><p>How they interact</p></li>
+</ul>
+</li>
+<li><p><strong>Phased implementation</strong>:</p>
+<ul>
+<li><p>Initial phase: minimal viable changes</p></li>
+<li><p>Subsequent phases: refactoring or new components</p></li>
+<li><p>Migration strategy if needed</p></li>
+</ul>
+</li>
+<li><p><strong>Risk mitigation</strong>:</p>
+<ul>
+<li><p>Incremental rollout approach</p></li>
+<li><p>Feature flags or configuration</p></li>
+<li><p>Rollback strategy</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Trade-offs</strong>:</p>
+<ul class="simple">
+<li><p>✅ Balanced approach for complex features</p></li>
+<li><p>✅ Allows iterative refinement</p></li>
+<li><p>❌ More complex planning required</p></li>
+<li><p>❌ Potential for inconsistency if not well-coordinated</p></li>
+</ul>
+</section>
+</section>
+<section id="out-of-scope-for-gap-analysis">
+<h3>4. Out-of-Scope for Gap Analysis<a class="headerlink" href="#out-of-scope-for-gap-analysis" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Defer deep research activities to the design phase.</p></li>
+<li><p>Record unknowns as concise “Research Needed” items only.</p></li>
+</ul>
+</section>
+<section id="implementation-complexity-risk">
+<h3>5. Implementation Complexity &amp; Risk<a class="headerlink" href="#implementation-complexity-risk" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Effort:</p>
+<ul>
+<li><p>S (1–3 days): existing patterns, minimal deps, straightforward integration</p></li>
+<li><p>M (3–7 days): some new patterns/integrations, moderate complexity</p></li>
+<li><p>L (1–2 weeks): significant functionality, multiple integrations or workflows</p></li>
+<li><p>XL (2+ weeks): architectural changes, unfamiliar tech, broad impact</p></li>
+</ul>
+</li>
+<li><p>Risk:</p>
+<ul>
+<li><p>High: unknown tech, complex integrations, architectural shifts, unclear perf/security path</p></li>
+<li><p>Medium: new patterns with guidance, manageable integrations, known perf solutions</p></li>
+<li><p>Low: extend established patterns, familiar tech, clear scope, minimal integration</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="output-checklist">
+<h3>Output Checklist<a class="headerlink" href="#output-checklist" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Requirement-to-Asset Map with gaps tagged (Missing / Unknown / Constraint)</p></li>
+<li><p>Options A/B/C with short rationale and trade-offs</p></li>
+<li><p>Effort (S/M/L/XL) and Risk (High/Medium/Low) with one-line justification each</p></li>
+<li><p>Recommendations for design phase:</p>
+<ul>
+<li><p>Preferred approach and key decisions</p></li>
+<li><p>Research items to carry forward</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="principles">
+<h2>Principles<a class="headerlink" href="#principles" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Information over decisions</strong>: Provide analysis and options, not final choices</p></li>
+<li><p><strong>Multiple viable options</strong>: Offer credible alternatives when applicable</p></li>
+<li><p><strong>Explicit gaps and assumptions</strong>: Flag unknowns and constraints clearly</p></li>
+<li><p><strong>Context-aware</strong>: Align with existing patterns and architecture limits</p></li>
+<li><p><strong>Transparent effort and risk</strong>: Justify labels succinctly</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./.kiro/settings/rules"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objective">Objective</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis-framework">Analysis Framework</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#current-state-investigation">1. Current State Investigation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-feasibility-analysis">2. Requirements Feasibility Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-approach-options">3. Implementation Approach Options</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#option-a-extend-existing-components">Option A: Extend Existing Components</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#option-b-create-new-components">Option B: Create New Components</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#option-c-hybrid-approach">Option C: Hybrid Approach</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#out-of-scope-for-gap-analysis">4. Out-of-Scope for Gap Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-complexity-risk">5. Implementation Complexity &amp; Risk</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#output-checklist">Output Checklist</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#principles">Principles</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

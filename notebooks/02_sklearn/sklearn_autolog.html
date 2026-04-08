@@ -1,0 +1,1031 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>scikit-learn × MLflow チュートリアル &#8212; MLflow Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/02_sklearn/sklearn_autolog';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="PyTorch × MLflow チュートリアル" href="../03_pytorch/pytorch_tracking.html" />
+    <link rel="prev" title="MLflow 概要 — 4つのコンポーネント" href="../01_concepts/mlflow_overview.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MLflow Tutorial</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../01_concepts/mlflow_overview.html">MLflow 概要 — 4つのコンポーネント</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">scikit-learn × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_pytorch/pytorch_tracking.html">PyTorch × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_experiment_management/hyperparam_search.html">ハイパーパラメータ探索と実験比較</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_champion_challenger/champion_challenger.html">チャンピオン/チャレンジャーモデル管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_deployment/fastapi_serving.html">FastAPI による MLflow チャンピオンモデルのサービング</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial/issues/new?title=Issue%20on%20page%20%2Fnotebooks/02_sklearn/sklearn_autolog.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/notebooks/02_sklearn/sklearn_autolog.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>scikit-learn × MLflow チュートリアル</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">前提条件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">学習目標</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">環境セットアップ</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">データ準備</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-3-1-autolog">Task 3.1: autolog と手動ロギング</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-mlflow-sklearn-autolog">Example 1: <code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.autolog()</span></code> による自動ロギング</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2">Example 2: 手動ロギング</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#autolog-vs">autolog vs 手動ロギング の比較</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-3-2-model-registry">Task 3.2: Model Registry への登録とロード</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-registry">Model Registry の確認</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-3-3">Task 3.3: トラブルシューティング</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">よくあるエラーと対処法</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow">1. MLflow バージョンが古い</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#run-id">2. Run ID が見つからない</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#experiment">3. Experiment が見つからない</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">4. モデルのロードに失敗する</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#autolog">5. autolog と手動ロギングの競合</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">まとめ</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">次のステップ</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="scikit-learn-mlflow">
+<h1>scikit-learn × MLflow チュートリアル<a class="headerlink" href="#scikit-learn-mlflow" title="Permalink to this heading">#</a></h1>
+<section id="id1">
+<h2>前提条件<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>conda 仮想環境 <code class="docutils literal notranslate"><span class="pre">mlflow-tutorial</span></code> がアクティブであること</p></li>
+<li><p>MLflow &gt;= 2.8.0、scikit-learn がインストール済みであること</p></li>
+<li><p>バージョン確認: <code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">--version</span></code></p></li>
+<li><p>ノートブック <code class="docutils literal notranslate"><span class="pre">01_concepts</span></code> の内容（Experiment / Run / Artifact の概念）を理解していること</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>学習目標<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.autolog()</span></code> を使って scikit-learn モデルのパラメータ・メトリクス・モデルを自動ロギングする方法を習得する</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlflow.log_params()</span></code> / <code class="docutils literal notranslate"><span class="pre">mlflow.log_metrics()</span></code> / <code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.log_model()</span></code> を使った手動ロギングの方法を習得する</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlflow.register_model()</span></code> で Model Registry にモデルを登録し、<code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.load_model()</span></code> でロード・推論する手順を習得する</p></li>
+<li><p>ロギング中の典型的エラーとトラブルシューティング手順を理解する</p></li>
+</ol>
+</section>
+<section id="id3">
+<h2>環境セットアップ<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>まず必要なライブラリをインポートし、MLflow の Tracking URI を設定します。<br />
+<code class="docutils literal notranslate"><span class="pre">./mlruns</span></code> はローカルファイルシステム上のディレクトリで、Phase 1（シングルマシン構成）向けの設定です。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mlflow</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_iris</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span>
+
+<span class="c1"># 再現性のためシードを固定</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Phase 1: ローカルファイルシステムを Tracking URI として使用</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="s2">&quot;./mlruns&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MLflow version: </span><span class="si">{</span><span class="n">mlflow</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tracking URI: </span><span class="si">{</span><span class="n">mlflow</span><span class="o">.</span><span class="n">get_tracking_uri</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MLflow version: 2.11.3
+Tracking URI: ./mlruns
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id4">
+<h2>データ準備<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>iris データセットを使います。<code class="docutils literal notranslate"><span class="pre">sklearn.datasets.load_iris</span></code> は内蔵データセットのため、インターネット接続は不要です。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># iris データセットの読み込み（ダウンロード不要・内蔵データ）</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">iris</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;データセット形状: X=</span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, y=</span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;クラス: </span><span class="si">{</span><span class="n">iris</span><span class="o">.</span><span class="n">target_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 訓練/テスト分割</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;訓練データ: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="si">}</span><span class="s2">サンプル, テストデータ: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="si">}</span><span class="s2">サンプル&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>データセット形状: X=(150, 4), y=(150,)
+クラス: [&#39;setosa&#39; &#39;versicolor&#39; &#39;virginica&#39;]
+訓練データ: 120サンプル, テストデータ: 30サンプル
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="task-3-1-autolog">
+<h2>Task 3.1: autolog と手動ロギング<a class="headerlink" href="#task-3-1-autolog" title="Permalink to this heading">#</a></h2>
+<section id="example-1-mlflow-sklearn-autolog">
+<h3>Example 1: <code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.autolog()</span></code> による自動ロギング<a class="headerlink" href="#example-1-mlflow-sklearn-autolog" title="Permalink to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.autolog()</span></code> を呼び出すだけで、以下が自動的に記録されます:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>記録対象</p></th>
+<th class="head"><p>内容</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>パラメータ</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n_estimators</span></code>, <code class="docutils literal notranslate"><span class="pre">max_depth</span></code> など全ハイパーパラメータ</p></td>
+</tr>
+<tr class="row-odd"><td><p>メトリクス</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">training_accuracy_score</span></code>, <code class="docutils literal notranslate"><span class="pre">test_accuracy_score</span></code> など</p></td>
+</tr>
+<tr class="row-even"><td><p>モデル</p></td>
+<td><p>fitted モデルが artifact として保存</p></td>
+</tr>
+<tr class="row-odd"><td><p>依存関係</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> が自動生成</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Experiment の設定（なければ自動作成）</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">set_experiment</span><span class="p">(</span><span class="s2">&quot;sklearn-iris&quot;</span><span class="p">)</span>
+
+<span class="c1"># autolog を有効化</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">autolog</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="s2">&quot;autolog_example&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">run</span><span class="p">:</span>
+    <span class="c1"># モデルの定義と訓練（autolog が自動でパラメータ・メトリクス・モデルを記録）</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+    <span class="c1"># テストデータでの評価</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy: </span><span class="si">{</span><span class="n">acc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run ID: </span><span class="si">{</span><span class="n">run</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2024/03/15 10:23:45 INFO mlflow.tracking.fluent: Experiment with name &#39;sklearn-iris&#39; does not exist. Creating a new experiment.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accuracy: 1.0000
+Run ID: a3f8b2c1d4e5f6a7b8c9d0e1f2a3b4c5
+</pre></div>
+</div>
+</div>
+</div>
+<p>autolog では <code class="docutils literal notranslate"><span class="pre">clf.fit()</span></code> の時点で自動的にパラメータとメトリクスが MLflow に記録されます。<br />
+MLflow UI（<code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">ui</span></code> で起動）で Run の詳細を確認してみましょう。</p>
+</section>
+<hr class="docutils" />
+<section id="example-2">
+<h3>Example 2: 手動ロギング<a class="headerlink" href="#example-2" title="Permalink to this heading">#</a></h3>
+<p>autolog を無効化して、<code class="docutils literal notranslate"><span class="pre">log_params</span></code> / <code class="docutils literal notranslate"><span class="pre">log_metrics</span></code> / <code class="docutils literal notranslate"><span class="pre">log_model</span></code> を明示的に呼び出す手動ロギングの例です。<br />
+記録するパラメータやメトリクスを細かくコントロールしたい場合に使います。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># autolog を無効化</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">autolog</span><span class="p">(</span><span class="n">disable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="s2">&quot;manual_log_example&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">run</span><span class="p">:</span>
+    <span class="c1"># ハイパーパラメータの定義</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># モデルの定義と訓練</span>
+    <span class="n">clf2</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">clf2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">acc2</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">clf2</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+
+    <span class="c1"># 手動ロギング</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>                          <span class="c1"># パラメータを一括記録</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;accuracy&quot;</span><span class="p">,</span> <span class="n">acc2</span><span class="p">)</span>                <span class="c1"># メトリクスを記録</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span><span class="n">clf2</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">)</span>            <span class="c1"># モデルを artifact として記録</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run ID: </span><span class="si">{</span><span class="n">run</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy: </span><span class="si">{</span><span class="n">acc2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 後続のセルで使用するために run_id を保持</span>
+<span class="n">manual_run_id</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Run ID: d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2
+Accuracy: 0.9667
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="autolog-vs">
+<h3>autolog vs 手動ロギング の比較<a class="headerlink" href="#autolog-vs" title="Permalink to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>観点</p></th>
+<th class="head"><p>autolog</p></th>
+<th class="head"><p>手動ロギング</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>実装コスト</p></td>
+<td><p>低い（1行で完結）</p></td>
+<td><p>高い（明示的に記述）</p></td>
+</tr>
+<tr class="row-odd"><td><p>記録の細かさ</p></td>
+<td><p>フレームワーク依存</p></td>
+<td><p>完全にコントロール可能</p></td>
+</tr>
+<tr class="row-even"><td><p>カスタムメトリクス</p></td>
+<td><p>追加が必要</p></td>
+<td><p>自由に追加</p></td>
+</tr>
+<tr class="row-odd"><td><p>推奨場面</p></td>
+<td><p>プロトタイピング</p></td>
+<td><p>本番・複雑な実験</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="task-3-2-model-registry">
+<h2>Task 3.2: Model Registry への登録とロード<a class="headerlink" href="#task-3-2-model-registry" title="Permalink to this heading">#</a></h2>
+<p>訓練したモデルを Model Registry に登録し、エイリアスを使ってロードする手順を示します。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mlflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">MlflowClient</span>
+
+<span class="c1"># 手動ロギングの Run から Model Registry へ登録</span>
+<span class="n">model_uri</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;runs:/</span><span class="si">{</span><span class="n">manual_run_id</span><span class="si">}</span><span class="s2">/model&quot;</span>
+<span class="n">registered</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">register_model</span><span class="p">(</span><span class="n">model_uri</span><span class="p">,</span> <span class="s2">&quot;IrisClassifier&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model registered: version </span><span class="si">{</span><span class="n">registered</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model name: </span><span class="si">{</span><span class="n">registered</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model URI: </span><span class="si">{</span><span class="n">model_uri</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Registered model &#39;IrisClassifier&#39; already exists. Creating a new version of this model...
+2024/03/15 10:24:12 INFO mlflow.store.model_registry.abstract_store: Waiting up to 300 seconds for model version to finish creation. Model name: IrisClassifier, version 1
+Created version &#39;1&#39; of model &#39;IrisClassifier&#39;.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model registered: version 1
+Model name: IrisClassifier
+Model URI: runs:/d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2/model
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MlflowClient を使ってエイリアスを付与（MLflow 2.8.0 以降の推奨方式）</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">set_registered_model_alias</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;IrisClassifier&quot;</span><span class="p">,</span>
+    <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;champion&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="n">registered</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;エイリアス &#39;champion&#39; を version </span><span class="si">{</span><span class="n">registered</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> に設定しました&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>エイリアス &#39;champion&#39; を version 1 に設定しました
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># runs:/ URI でロード</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== runs:/ URI からロード ===&quot;</span><span class="p">)</span>
+<span class="n">loaded_model</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">model_uri</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">loaded_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Predictions (最初の3サンプル): </span><span class="si">{</span><span class="n">predictions</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;正解ラベル:                     </span><span class="si">{</span><span class="n">y_test</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># models:/@alias URI でロード（エイリアスを使った本番向けロード方法）</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== models:/@champion URI からロード ===&quot;</span><span class="p">)</span>
+<span class="n">champion_model</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;models:/IrisClassifier@champion&quot;</span><span class="p">)</span>
+<span class="n">champion_predictions</span> <span class="o">=</span> <span class="n">champion_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Predictions (最初の3サンプル): </span><span class="si">{</span><span class="n">champion_predictions</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== runs:/ URI からロード ===
+Predictions (最初の3サンプル): [1 0 2]
+正解ラベル:                     [1 0 2]
+
+=== models:/@champion URI からロード ===
+Predictions (最初の3サンプル): [1 0 2]
+</pre></div>
+</div>
+</div>
+</div>
+<section id="model-registry">
+<h3>Model Registry の確認<a class="headerlink" href="#model-registry" title="Permalink to this heading">#</a></h3>
+<p>登録済みモデルの一覧と各バージョンの情報をプログラムで取得できます。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 登録済みモデルの一覧を確認</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== 登録済みモデル ===&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">rm</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">search_registered_models</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model: </span><span class="si">{</span><span class="n">rm</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">mv</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">search_model_versions</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;name=&#39;</span><span class="si">{</span><span class="n">rm</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Version </span><span class="si">{</span><span class="n">mv</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2"> | aliases: </span><span class="si">{</span><span class="n">mv</span><span class="o">.</span><span class="n">aliases</span><span class="si">}</span><span class="s2"> | run_id: </span><span class="si">{</span><span class="n">mv</span><span class="o">.</span><span class="n">run_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== 登録済みモデル ===
+Model: IrisClassifier
+  Version 1 | aliases: [&#39;champion&#39;] | run_id: d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="task-3-3">
+<h2>Task 3.3: トラブルシューティング<a class="headerlink" href="#task-3-3" title="Permalink to this heading">#</a></h2>
+<p>ロギング中によく発生するエラーと対処方法をまとめます。</p>
+<section id="id5">
+<h3>よくあるエラーと対処法<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<section id="mlflow">
+<h4>1. MLflow バージョンが古い<a class="headerlink" href="#mlflow" title="Permalink to this heading">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ne">AttributeError</span><span class="p">:</span> <span class="n">module</span> <span class="s1">&#39;mlflow&#39;</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">&#39;sklearn&#39;</span>
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">set_registered_model_alias</span><span class="p">()</span> <span class="n">takes</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p><strong>対処:</strong> MLflow のバージョンを確認・更新する</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># バージョン確認（&gt;= 2.8.0 が必要）</span>
+mlflow<span class="w"> </span>--version
+
+<span class="c1"># 更新</span>
+pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span><span class="s2">&quot;mlflow&gt;=2.8.0&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="run-id">
+<h4>2. Run ID が見つからない<a class="headerlink" href="#run-id" title="Permalink to this heading">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mlflow</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">MlflowException</span><span class="p">:</span> <span class="n">Run</span> <span class="s1">&#39;xxxxxxxx&#39;</span> <span class="ow">not</span> <span class="n">found</span>
+</pre></div>
+</div>
+<p><strong>原因:</strong> 別の Tracking URI を参照している、または Run が別の Experiment に属している<br />
+<strong>対処:</strong> 使用中の run_id と Tracking URI を確認する</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mlflow</span>
+
+<span class="c1"># 現在の Tracking URI を確認</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mlflow</span><span class="o">.</span><span class="n">get_tracking_uri</span><span class="p">())</span>
+
+<span class="c1"># Run の詳細を確認</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">run</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s2">&quot;your_run_id_here&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="experiment">
+<h4>3. Experiment が見つからない<a class="headerlink" href="#experiment" title="Permalink to this heading">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mlflow</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">MlflowException</span><span class="p">:</span> <span class="n">Could</span> <span class="ow">not</span> <span class="n">find</span> <span class="n">experiment</span> <span class="k">with</span> <span class="n">ID</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p><strong>原因:</strong> Experiment 名が一致していない、または Tracking URI が異なる<br />
+<strong>対処:</strong> Experiment 名と Tracking URI を確認する</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 全 Experiment の一覧を確認</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">MlflowClient</span><span class="p">()</span>
+<span class="n">experiments</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_experiments</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">exp</span> <span class="ow">in</span> <span class="n">experiments</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ID: </span><span class="si">{</span><span class="n">exp</span><span class="o">.</span><span class="n">experiment_id</span><span class="si">}</span><span class="s2">, Name: </span><span class="si">{</span><span class="n">exp</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 特定の Experiment を名前で取得</span>
+<span class="n">exp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_experiment_by_name</span><span class="p">(</span><span class="s2">&quot;sklearn-iris&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h4>4. モデルのロードに失敗する<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ne">OSError</span><span class="p">:</span> <span class="n">No</span> <span class="n">such</span> <span class="n">file</span> <span class="ow">or</span> <span class="n">directory</span><span class="p">:</span> <span class="s1">&#39;./mlruns/...&#39;</span>
+</pre></div>
+</div>
+<p><strong>原因:</strong> カレントディレクトリが異なる、または Tracking URI が設定されていない<br />
+<strong>対処:</strong> ノートブック実行前に必ず Tracking URI を設定する</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="s2">&quot;./mlruns&quot;</span><span class="p">)</span>  <span class="c1"># 毎回明示的に設定</span>
+</pre></div>
+</div>
+</section>
+<section id="autolog">
+<h4>5. autolog と手動ロギングの競合<a class="headerlink" href="#autolog" title="Permalink to this heading">#</a></h4>
+<p><strong>症状:</strong> 同じパラメータが重複して記録される、または上書きされる<br />
+<strong>対処:</strong> autolog を明示的に無効化してから手動ロギングを行う</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">autolog</span><span class="p">(</span><span class="n">disable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># 手動ロギング前に無効化</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># トラブルシューティング用: 現在の環境情報を確認</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;現在の Tracking URI: </span><span class="si">{</span><span class="n">mlflow</span><span class="o">.</span><span class="n">get_tracking_uri</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Experiments 一覧 ===&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">exp</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">search_experiments</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ID: </span><span class="si">{</span><span class="n">exp</span><span class="o">.</span><span class="n">experiment_id</span><span class="si">}</span><span class="s2">, Name: </span><span class="si">{</span><span class="n">exp</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== sklearn-iris の Runs ===&quot;</span><span class="p">)</span>
+<span class="n">exp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_experiment_by_name</span><span class="p">(</span><span class="s2">&quot;sklearn-iris&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">exp</span><span class="p">:</span>
+    <span class="n">runs</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_runs</span><span class="p">(</span><span class="n">experiment_ids</span><span class="o">=</span><span class="p">[</span><span class="n">exp</span><span class="o">.</span><span class="n">experiment_id</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_name</span><span class="si">}</span><span class="s2"> | ID: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span><span class="si">}</span><span class="s2"> | Status: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>現在の Tracking URI: ./mlruns
+
+=== Experiments 一覧 ===
+ID: 0, Name: Default
+ID: 1, Name: sklearn-iris
+
+=== sklearn-iris の Runs ===
+Run: autolog_example | ID: a3f8b2c1d4e5f6a7b8c9d0e1f2a3b4c5 | Status: FINISHED
+Run: manual_log_example | ID: d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2 | Status: FINISHED
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="id7">
+<h2>まとめ<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
+<p>このノートブックでは以下を学びました:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>内容</p></th>
+<th class="head"><p>使用 API</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>自動ロギング</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.autolog()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>パラメータの手動記録</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow.log_params()</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>メトリクスの手動記録</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow.log_metric()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>モデルの記録</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.log_model()</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Model Registry への登録</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow.register_model()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>エイリアスの設定</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MlflowClient.set_registered_model_alias()</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>モデルのロード</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.load_model()</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="id8">
+<h3>次のステップ<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h3>
+<p>次のノートブックでは PyTorch モデルに MLflow を適用し、エポックごとのメトリクスロギングと <code class="docutils literal notranslate"><span class="pre">mlflow.pytorch.log_model()</span></code> を使ったモデル保存・ロードを学びます。</p>
+<p><strong>次のノートブック:</strong> <a class="reference internal" href="../03_pytorch/pytorch_tracking.html"><span class="doc std std-doc">03_pytorch/pytorch_tracking.ipynb</span></a></p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/02_sklearn"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../01_concepts/mlflow_overview.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">MLflow 概要 — 4つのコンポーネント</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../03_pytorch/pytorch_tracking.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">PyTorch × MLflow チュートリアル</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">前提条件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">学習目標</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">環境セットアップ</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">データ準備</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-3-1-autolog">Task 3.1: autolog と手動ロギング</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-mlflow-sklearn-autolog">Example 1: <code class="docutils literal notranslate"><span class="pre">mlflow.sklearn.autolog()</span></code> による自動ロギング</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2">Example 2: 手動ロギング</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#autolog-vs">autolog vs 手動ロギング の比較</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-3-2-model-registry">Task 3.2: Model Registry への登録とロード</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-registry">Model Registry の確認</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task-3-3">Task 3.3: トラブルシューティング</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">よくあるエラーと対処法</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mlflow">1. MLflow バージョンが古い</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#run-id">2. Run ID が見つからない</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#experiment">3. Experiment が見つからない</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">4. モデルのロードに失敗する</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#autolog">5. autolog と手動ロギングの競合</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">まとめ</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">次のステップ</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

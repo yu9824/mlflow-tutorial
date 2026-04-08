@@ -1,0 +1,625 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Requirements Generation &#8212; MLflow Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '.claude/commands/kiro/spec-requirements';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MLflow Tutorial</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/01_concepts/mlflow_overview.html">MLflow 概要 — 4つのコンポーネント</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/02_sklearn/sklearn_autolog.html">scikit-learn × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/03_pytorch/pytorch_tracking.html">PyTorch × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/04_experiment_management/hyperparam_search.html">ハイパーパラメータ探索と実験比較</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/05_champion_challenger/champion_challenger.html">チャンピオン/チャレンジャーモデル管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/06_deployment/fastapi_serving.html">FastAPI による MLflow チャンピオンモデルのサービング</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial/issues/new?title=Issue%20on%20page%20%2F.claude/commands/kiro/spec-requirements.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/.claude/commands/kiro/spec-requirements.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Requirements Generation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#execution-steps">Execution Steps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#important-constraints">Important Constraints</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-guidance">Tool Guidance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output-description">Output Description</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#safety-fallback">Safety &amp; Fallback</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-scenarios">Error Scenarios</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-phase-design-generation">Next Phase: Design Generation</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="requirements-generation">
+<h1>Requirements Generation<a class="headerlink" href="#requirements-generation" title="Permalink to this heading">#</a></h1>
+<p>&lt;background_information&gt;</p>
+<ul class="simple">
+<li><p><strong>Mission</strong>: Generate comprehensive, testable requirements in EARS format based on the project description from spec initialization</p></li>
+<li><p><strong>Success Criteria</strong>:</p>
+<ul>
+<li><p>Create complete requirements document aligned with steering context</p></li>
+<li><p>Follow the project’s EARS patterns and constraints for all acceptance criteria</p></li>
+<li><p>Focus on core functionality without implementation details</p></li>
+<li><p>Update metadata to track generation status
+&lt;/background_information&gt;</p></li>
+</ul>
+</li>
+</ul>
+<instructions>
+## Core Task
+Generate complete requirements for feature **$1** based on the project description in requirements.md.
+<section id="execution-steps">
+<h2>Execution Steps<a class="headerlink" href="#execution-steps" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Load Context</strong>:</p>
+<ul class="simple">
+<li><p>Read <code class="docutils literal notranslate"><span class="pre">.kiro/specs/$1/spec.json</span></code> for language and metadata</p></li>
+<li><p>Read <code class="docutils literal notranslate"><span class="pre">.kiro/specs/$1/requirements.md</span></code> for project description</p></li>
+<li><p><strong>Load ALL steering context</strong>: Read entire <code class="docutils literal notranslate"><span class="pre">.kiro/steering/</span></code> directory including:</p>
+<ul>
+<li><p>Default files: <code class="docutils literal notranslate"><span class="pre">structure.md</span></code>, <code class="docutils literal notranslate"><span class="pre">tech.md</span></code>, <code class="docutils literal notranslate"><span class="pre">product.md</span></code></p></li>
+<li><p>All custom steering files (regardless of mode settings)</p></li>
+<li><p>This provides complete project memory and context</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Read Guidelines</strong>:</p>
+<ul class="simple">
+<li><p>Read <code class="docutils literal notranslate"><span class="pre">.kiro/settings/rules/ears-format.md</span></code> for EARS syntax rules</p></li>
+<li><p>Read <code class="docutils literal notranslate"><span class="pre">.kiro/settings/templates/specs/requirements.md</span></code> for document structure</p></li>
+</ul>
+</li>
+<li><p><strong>Generate Requirements</strong>:</p>
+<ul class="simple">
+<li><p>Create initial requirements based on project description</p></li>
+<li><p>Group related functionality into logical requirement areas</p></li>
+<li><p>Apply EARS format to all acceptance criteria</p></li>
+<li><p>Use language specified in spec.json</p></li>
+</ul>
+</li>
+<li><p><strong>Update Metadata</strong>:</p>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">phase:</span> <span class="pre">&quot;requirements-generated&quot;</span></code></p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">approvals.requirements.generated:</span> <span class="pre">true</span></code></p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">updated_at</span></code> timestamp</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="important-constraints">
+<h2>Important Constraints<a class="headerlink" href="#important-constraints" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Focus on WHAT, not HOW (no implementation details)</p></li>
+<li><p>Requirements must be testable and verifiable</p></li>
+<li><p>Choose appropriate subject for EARS statements (system/service name for software)</p></li>
+<li><p>Generate initial version first, then iterate with user feedback (no sequential questions upfront)</p></li>
+<li><p>Requirement headings in requirements.md MUST include a leading numeric ID only (for example: “Requirement 1”, “1.”, “2 Feature …”); do not use alphabetic IDs like “Requirement A”.
+</instructions></p></li>
+</ul>
+</section>
+<section id="tool-guidance">
+<h2>Tool Guidance<a class="headerlink" href="#tool-guidance" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Read first</strong>: Load all context (spec, steering, rules, templates) before generation</p></li>
+<li><p><strong>Write last</strong>: Update requirements.md only after complete generation</p></li>
+<li><p>Use <strong>WebSearch/WebFetch</strong> only if external domain knowledge needed</p></li>
+</ul>
+</section>
+<section id="output-description">
+<h2>Output Description<a class="headerlink" href="#output-description" title="Permalink to this heading">#</a></h2>
+<p>Provide output in the language specified in spec.json with:</p>
+<ol class="arabic simple">
+<li><p><strong>Generated Requirements Summary</strong>: Brief overview of major requirement areas (3-5 bullets)</p></li>
+<li><p><strong>Document Status</strong>: Confirm requirements.md updated and spec.json metadata updated</p></li>
+<li><p><strong>Next Steps</strong>: Guide user on how to proceed (approve and continue, or modify)</p></li>
+</ol>
+<p><strong>Format Requirements</strong>:</p>
+<ul class="simple">
+<li><p>Use Markdown headings for clarity</p></li>
+<li><p>Include file paths in code blocks</p></li>
+<li><p>Keep summary concise (under 300 words)</p></li>
+</ul>
+</section>
+<section id="safety-fallback">
+<h2>Safety &amp; Fallback<a class="headerlink" href="#safety-fallback" title="Permalink to this heading">#</a></h2>
+<section id="error-scenarios">
+<h3>Error Scenarios<a class="headerlink" href="#error-scenarios" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Missing Project Description</strong>: If requirements.md lacks project description, ask user for feature details</p></li>
+<li><p><strong>Ambiguous Requirements</strong>: Propose initial version and iterate with user rather than asking many upfront questions</p></li>
+<li><p><strong>Template Missing</strong>: If template files don’t exist, use inline fallback structure with warning</p></li>
+<li><p><strong>Language Undefined</strong>: Default to English (<code class="docutils literal notranslate"><span class="pre">en</span></code>) if spec.json doesn’t specify language</p></li>
+<li><p><strong>Incomplete Requirements</strong>: After generation, explicitly ask user if requirements cover all expected functionality</p></li>
+<li><p><strong>Steering Directory Empty</strong>: Warn user that project context is missing and may affect requirement quality</p></li>
+<li><p><strong>Non-numeric Requirement Headings</strong>: If existing headings do not include a leading numeric ID (for example, they use “Requirement A”), normalize them to numeric IDs and keep that mapping consistent (never mix numeric and alphabetic labels).</p></li>
+</ul>
+</section>
+<section id="next-phase-design-generation">
+<h3>Next Phase: Design Generation<a class="headerlink" href="#next-phase-design-generation" title="Permalink to this heading">#</a></h3>
+<p><strong>If Requirements Approved</strong>:</p>
+<ul class="simple">
+<li><p>Review generated requirements at <code class="docutils literal notranslate"><span class="pre">.kiro/specs/$1/requirements.md</span></code></p></li>
+<li><p><strong>Optional Gap Analysis</strong> (for existing codebases):</p>
+<ul>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">/kiro:validate-gap</span> <span class="pre">$1</span></code> to analyze implementation gap with current code</p></li>
+<li><p>Identifies existing components, integration points, and implementation strategy</p></li>
+<li><p>Recommended for brownfield projects; skip for greenfield</p></li>
+</ul>
+</li>
+<li><p>Then <code class="docutils literal notranslate"><span class="pre">/kiro:spec-design</span> <span class="pre">$1</span> <span class="pre">-y</span></code> to proceed to design phase</p></li>
+</ul>
+<p><strong>If Modifications Needed</strong>:</p>
+<ul class="simple">
+<li><p>Provide feedback and re-run <code class="docutils literal notranslate"><span class="pre">/kiro:spec-requirements</span> <span class="pre">$1</span></code></p></li>
+</ul>
+<p><strong>Note</strong>: Approval is mandatory before proceeding to design phase.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./.claude/commands/kiro"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#execution-steps">Execution Steps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#important-constraints">Important Constraints</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-guidance">Tool Guidance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output-description">Output Description</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#safety-fallback">Safety &amp; Fallback</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-scenarios">Error Scenarios</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-phase-design-generation">Next Phase: Design Generation</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

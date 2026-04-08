@@ -1,0 +1,1666 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Design Document — mlflow-tutorial &#8212; MLflow Tutorial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '.kiro/specs/mlflow-tutorial/design';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">MLflow Tutorial</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    はじめに
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/01_concepts/mlflow_overview.html">MLflow 概要 — 4つのコンポーネント</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/02_sklearn/sklearn_autolog.html">scikit-learn × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/03_pytorch/pytorch_tracking.html">PyTorch × MLflow チュートリアル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/04_experiment_management/hyperparam_search.html">ハイパーパラメータ探索と実験比較</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/05_champion_challenger/champion_challenger.html">チャンピオン/チャレンジャーモデル管理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/06_deployment/fastapi_serving.html">FastAPI による MLflow チャンピオンモデルのサービング</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/username/mlflow-tutorial/issues/new?title=Issue%20on%20page%20%2F.kiro/specs/mlflow-tutorial/design.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/.kiro/specs/mlflow-tutorial/design.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Design Document — mlflow-tutorial</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-goals">Non-Goals</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-pattern-boundary-map">Architecture Pattern &amp; Boundary Map</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technology-stack">Technology Stack</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#system-flows">System Flows</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flow-1-phase-1">Flow 1: ノートブック学習フロー（Phase 1）</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flow-2-req-9">Flow 2: チャンピオン/チャレンジャー昇格フロー（Req 9）</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flow-3-fastapi-req-1011">Flow 3: FastAPI 起動・推論フロー（Req 10・11）</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-traceability">Requirements Traceability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#components-and-interfaces">Components and Interfaces</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">コンポーネント一覧</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#content-layer">Content Layer</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sklearnnotebook-pytorchnotebook-experimentnotebook">SklearnNotebook / PyTorchNotebook / ExperimentNotebook</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#service-interface-mlflow-tracking">Service Interface（MLflow Tracking 呼び出しパターン）</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#experimentnotebook">ExperimentNotebook</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#service-interface-optuna-mlflow">Service Interface（Optuna + MLflow 統合パターン）</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#championchallengernotebook">ChampionChallengerNotebook</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#service-interface-modelregistry">Service Interface（ModelRegistry 操作）</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-layer">Service Layer</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fastapiapp">FastAPIApp</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#api-contract">API Contract</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#service-interface">Service Interface</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#config-layer">Config Layer</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyterbookconfig">JupyterBookConfig</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#state-management">State Management</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cicdworkflow">CICDWorkflow</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-job-contract">Batch / Job Contract</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#environmentconfig">EnvironmentConfig</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">State Management</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-model">Domain Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-contracts-integration">Data Contracts &amp; Integration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-handling">Error Handling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-strategy">Error Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-categories-and-responses">Error Categories and Responses</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring">Monitoring</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-strategy">Testing Strategy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">ノートブック動作検証</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter-book">Jupyter Book ビルド検証</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fastapi">FastAPI エンドポイント検証</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">オフライン動作検証</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-considerations">Security Considerations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supporting-references">Supporting References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="design-document-mlflow-tutorial">
+<h1>Design Document — mlflow-tutorial<a class="headerlink" href="#design-document-mlflow-tutorial" title="Permalink to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<p>本チュートリアルは MLflow を初めて使う ML エンジニア・データサイエンティストを対象に、MLflow の全体像から実務レベルのモデル管理・サービングまでを段階的に学べるコンテンツを提供する。コンテンツは Jupyter Book 0.15.x（<code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> / <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code> 形式）でビルドされ、GitHub Pages で公開される。ノートブックはすべてオフライン環境（外部インターネット非接続）で実行可能であり、データセットには sklearn 内蔵データセットまたはコード生成の合成データのみを使用する。</p>
+<p>アーキテクチャは学習フェーズとデプロイフェーズの2段階で構成される。学習フェーズはシングルマシン・ファイルベースで完結し、デプロイフェーズでは MLflow Tracking Server と FastAPI Web アプリを別プロセス（別ターミナル）で起動する2サーバー構成に移行する。Docker は使用しない。</p>
+<section id="goals">
+<h3>Goals<a class="headerlink" href="#goals" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>MLflow の4コンポーネント（Tracking・Models・Model Registry・Projects）を体系的に説明する</p></li>
+<li><p>sklearn・PyTorch それぞれのトレーニングから登録・推論までを実演するノートブックを提供する</p></li>
+<li><p>チャンピオン/チャレンジャーパターンを MLflow エイリアス API で実装するワークフローを示す</p></li>
+<li><p>FastAPI + MLflow の2サーバー構成でチャンピオンモデルをサービングするデプロイパターンを示す</p></li>
+<li><p>すべての手順が外部インターネット非接続環境で再現可能であること</p></li>
+</ul>
+</section>
+<section id="non-goals">
+<h3>Non-Goals<a class="headerlink" href="#non-goals" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Docker / コンテナオーケストレーションの使用（Docker 使用不可のため）</p></li>
+<li><p>クラウドストレージ（S3・Azure Blob・GCS）へのアーティファクト保存</p></li>
+<li><p>Jupyter Book 2.0（MyST <code class="docutils literal notranslate"><span class="pre">myst.yml</span></code>）形式への移行（今後の拡張として保留）</p></li>
+<li><p>Hyperopt・Ray Tune 等 Optuna 以外の外部 HPO ライブラリとの統合</p></li>
+<li><p>モデルモニタリング・ドリフト検知</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this heading">#</a></h2>
+<section id="architecture-pattern-boundary-map">
+<h3>Architecture Pattern &amp; Boundary Map<a class="headerlink" href="#architecture-pattern-boundary-map" title="Permalink to this heading">#</a></h3>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>graph TB
+    subgraph LearningMode[Phase 1: Learning Mode]
+        Notebooks[Jupyter Notebooks]
+        LocalFS[Local mlruns dir]
+        Notebooks --&gt;|mlflow.set_tracking_uri| LocalFS
+    end
+
+    subgraph DeployMode[Phase 2: Multi-Server Mode]
+        subgraph MLflowHost[MLflow Server Host port 5000]
+            MLflowServer[MLflow Tracking Server]
+            Registry[Model Registry]
+            Artifacts[Artifact Store local fs]
+            MLflowServer --&gt; Registry
+            MLflowServer --&gt; Artifacts
+        end
+        subgraph AppHost[App Server Host port 8000]
+            FastAPI[FastAPI App]
+            Model[Champion Model in memory]
+            FastAPI --&gt; Model
+        end
+        FastAPI --&gt;|MLFLOW_TRACKING_URI env var| MLflowServer
+        Registry --&gt;|models name at champion| Model
+    end
+
+    subgraph CICD[GitHub Actions]
+        Build[jupyter-book build]
+        Deploy[gh-pages branch]
+        Build --&gt; Deploy
+    end
+
+    subgraph EnvSetup[Environment]
+        Conda[conda env mlflow-tutorial]
+        ReqTxt[requirements.txt]
+        Conda --&gt; ReqTxt
+    end
+</pre></div>
+</div>
+<p><strong>Key Decisions</strong>:</p>
+<ul class="simple">
+<li><p>Phase 1（ノートブック学習）はシングルマシンで <code class="docutils literal notranslate"><span class="pre">./mlruns</span></code> に記録する。MLflow Server は不要</p></li>
+<li><p>Phase 2（デプロイ）で初めて MLflow Server をネットワーク越しに起動し、<code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI</span></code> で接続先を切り替える</p></li>
+<li><p>CI は pre-executed ノートブックの HTML 変換のみを行い、ノートブック再実行は行わない</p></li>
+</ul>
+</section>
+<section id="technology-stack">
+<h3>Technology Stack<a class="headerlink" href="#technology-stack" title="Permalink to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Layer</p></th>
+<th class="head"><p>採用技術 / バージョン</p></th>
+<th class="head"><p>役割</p></th>
+<th class="head"><p>備考</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ドキュメント</p></td>
+<td><p>Jupyter Book 0.15.x</p></td>
+<td><p>ノートブックを HTML サイトへビルド</p></td>
+<td><p>v2.0 の <code class="docutils literal notranslate"><span class="pre">myst.yml</span></code> は非採用（research.md 参照）</p></td>
+</tr>
+<tr class="row-odd"><td><p>HPO</p></td>
+<td><p>Optuna（最新安定版）</p></td>
+<td><p>ハイパーパラメータ最適化（Req 4）</p></td>
+<td><p>TPESampler を使用。外部接続不要</p></td>
+</tr>
+<tr class="row-even"><td><p>ML フレームワーク</p></td>
+<td><p>scikit-learn（最新安定版）</p></td>
+<td><p>Req 2 サンプル</p></td>
+<td><p>sklearn 内蔵データセットのみ使用</p></td>
+</tr>
+<tr class="row-odd"><td><p>ML フレームワーク</p></td>
+<td><p>PyTorch（最新安定版）</p></td>
+<td><p>Req 3 サンプル</p></td>
+<td><p>合成データのみ。<code class="docutils literal notranslate"><span class="pre">torch.manual_seed()</span></code> で再現性確保</p></td>
+</tr>
+<tr class="row-even"><td><p>実験管理</p></td>
+<td><p>MLflow &gt;= 2.8.0</p></td>
+<td><p>Tracking・Model Registry・エイリアス API</p></td>
+<td><p>2.8.0 でエイリアス機能が導入（research.md 参照）</p></td>
+</tr>
+<tr class="row-odd"><td><p>Web API</p></td>
+<td><p>FastAPI + uvicorn</p></td>
+<td><p>チャンピオンモデル推論エンドポイント</p></td>
+<td><p>lifespan でモデルロード</p></td>
+</tr>
+<tr class="row-even"><td><p>データバリデーション</p></td>
+<td><p>Pydantic v2</p></td>
+<td><p>FastAPI リクエスト/レスポンス型定義</p></td>
+<td><p>FastAPI の標準依存</p></td>
+</tr>
+<tr class="row-odd"><td><p>環境管理</p></td>
+<td><p>conda</p></td>
+<td><p>仮想環境 <code class="docutils literal notranslate"><span class="pre">mlflow-tutorial</span></code></p></td>
+<td><p>オフライン時は conda local channel または pip wheel</p></td>
+</tr>
+<tr class="row-even"><td><p>CI/CD</p></td>
+<td><p>GitHub Actions</p></td>
+<td><p>Jupyter Book ビルド → gh-pages デプロイ</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">execute_notebooks:</span> <span class="pre">&quot;off&quot;</span></code> で再実行しない</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="system-flows">
+<h2>System Flows<a class="headerlink" href="#system-flows" title="Permalink to this heading">#</a></h2>
+<section id="flow-1-phase-1">
+<h3>Flow 1: ノートブック学習フロー（Phase 1）<a class="headerlink" href="#flow-1-phase-1" title="Permalink to this heading">#</a></h3>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>sequenceDiagram
+    participant Dev as 開発者
+    participant NB as Jupyter Notebook
+    participant MLflow as MLflow Local
+    participant UI as MLflow UI
+
+    Dev-&gt;&gt;NB: カーネル実行
+    NB-&gt;&gt;MLflow: mlflow.start_run
+    NB-&gt;&gt;MLflow: log_params / log_metrics / log_model
+    NB-&gt;&gt;MLflow: register_model
+    NB-&gt;&gt;MLflow: set_registered_model_alias champion
+    Dev-&gt;&gt;UI: mlflow ui でブラウザ確認
+</pre></div>
+</div>
+</section>
+<section id="flow-2-req-9">
+<h3>Flow 2: チャンピオン/チャレンジャー昇格フロー（Req 9）<a class="headerlink" href="#flow-2-req-9" title="Permalink to this heading">#</a></h3>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>sequenceDiagram
+    participant NB as 昇格ノートブック
+    participant Client as MlflowClient
+    participant Registry as Model Registry
+
+    NB-&gt;&gt;Client: search_model_versions
+    Client--&gt;&gt;NB: champion version + run metrics
+    NB-&gt;&gt;Client: get_run challenger_run_id
+    Client--&gt;&gt;NB: challenger metrics
+    NB-&gt;&gt;NB: compare metrics
+    alt challenger が優秀
+        NB-&gt;&gt;Client: set_registered_model_alias champion new_version
+        NB-&gt;&gt;Client: set_registered_model_alias archived old_version
+    else champion が維持
+        NB-&gt;&gt;NB: 変更なし
+    end
+</pre></div>
+</div>
+</section>
+<section id="flow-3-fastapi-req-1011">
+<h3>Flow 3: FastAPI 起動・推論フロー（Req 10・11）<a class="headerlink" href="#flow-3-fastapi-req-1011" title="Permalink to this heading">#</a></h3>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>sequenceDiagram
+    participant User as クライアント
+    participant App as FastAPI App
+    participant MLflowServer as MLflow Server
+    participant Registry as Model Registry
+
+    App-&gt;&gt;MLflowServer: lifespan 起動時 get_model_version_by_alias champion
+    MLflowServer--&gt;&gt;App: ModelVersion info
+    App-&gt;&gt;Registry: mlflow.pyfunc.load_model models name at champion
+    Registry--&gt;&gt;App: loaded model object
+    Note over App: app.state.model にキャッシュ
+
+    User-&gt;&gt;App: POST /predict features
+    App-&gt;&gt;App: asyncio.to_thread(model.predict, features)
+    App--&gt;&gt;User: PredictResponse prediction model_version alias
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="requirements-traceability">
+<h2>Requirements Traceability<a class="headerlink" href="#requirements-traceability" title="Permalink to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>要件</p></th>
+<th class="head"><p>概要</p></th>
+<th class="head"><p>コンポーネント</p></th>
+<th class="head"><p>インターフェース</p></th>
+<th class="head"><p>フロー</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1.1–1.4</p></td>
+<td><p>MLflow コア概念説明</p></td>
+<td><p>TutorialContent</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p>2.1–2.5</p></td>
+<td><p>sklearn サンプル</p></td>
+<td><p>SklearnNotebook</p></td>
+<td><p>MLflowTrackingIF</p></td>
+<td><p>Flow 1</p></td>
+</tr>
+<tr class="row-even"><td><p>3.1–3.4</p></td>
+<td><p>PyTorch サンプル</p></td>
+<td><p>PyTorchNotebook</p></td>
+<td><p>MLflowTrackingIF</p></td>
+<td><p>Flow 1</p></td>
+</tr>
+<tr class="row-odd"><td><p>4.1–4.6</p></td>
+<td><p>Optuna HPO + 実験比較</p></td>
+<td><p>ExperimentNotebook</p></td>
+<td><p>MLflowSearchIF, OptunaIF</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-even"><td><p>5.1–5.5</p></td>
+<td><p>Jupyter Book 構成</p></td>
+<td><p>JupyterBookConfig</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p>6.1–6.4</p></td>
+<td><p>GitHub Pages デプロイ</p></td>
+<td><p>CICDWorkflow</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-even"><td><p>7.1–7.6</p></td>
+<td><p>環境セットアップ</p></td>
+<td><p>EnvironmentConfig</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p>8.1–8.6</p></td>
+<td><p>オフライン動作保証</p></td>
+<td><p>全ノートブック</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-even"><td><p>9.1–9.5</p></td>
+<td><p>チャンピオン/チャレンジャー管理</p></td>
+<td><p>ChampionChallengerNotebook</p></td>
+<td><p>ModelRegistryIF</p></td>
+<td><p>Flow 2</p></td>
+</tr>
+<tr class="row-odd"><td><p>10.1–10.6</p></td>
+<td><p>Web アプリ搭載・サービング</p></td>
+<td><p>FastAPIApp</p></td>
+<td><p>PredictIF</p></td>
+<td><p>Flow 3</p></td>
+</tr>
+<tr class="row-even"><td><p>11.1–11.5</p></td>
+<td><p>マルチサーバー構成ガイド</p></td>
+<td><p>ServerStartupGuide</p></td>
+<td><p>—</p></td>
+<td><p>Flow 3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="components-and-interfaces">
+<h2>Components and Interfaces<a class="headerlink" href="#components-and-interfaces" title="Permalink to this heading">#</a></h2>
+<section id="id1">
+<h3>コンポーネント一覧<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Layer</p></th>
+<th class="head"><p>Intent</p></th>
+<th class="head"><p>Req Coverage</p></th>
+<th class="head"><p>Key Dependencies</p></th>
+<th class="head"><p>Contracts</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TutorialContent</p></td>
+<td><p>Content</p></td>
+<td><p>MLflow 概念説明ページ群</p></td>
+<td><p>1.1–1.4</p></td>
+<td><p>JupyterBookConfig (P0)</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p>SklearnNotebook</p></td>
+<td><p>Content</p></td>
+<td><p>sklearn トレーニング + ロギング</p></td>
+<td><p>2.1–2.5, 8.1–8.6</p></td>
+<td><p>MLflowTrackingIF (P0), sklearn (P0)</p></td>
+<td><p>Service</p></td>
+</tr>
+<tr class="row-even"><td><p>PyTorchNotebook</p></td>
+<td><p>Content</p></td>
+<td><p>PyTorch トレーニング + ロギング</p></td>
+<td><p>3.1–3.4, 8.1–8.6</p></td>
+<td><p>MLflowTrackingIF (P0), PyTorch (P0)</p></td>
+<td><p>Service</p></td>
+</tr>
+<tr class="row-odd"><td><p>ExperimentNotebook</p></td>
+<td><p>Content</p></td>
+<td><p>Optuna によるハイパーパラメータ最適化 + MLflow 記録</p></td>
+<td><p>4.1–4.6</p></td>
+<td><p>MLflowSearchIF (P0), Optuna (P0)</p></td>
+<td><p>Service</p></td>
+</tr>
+<tr class="row-even"><td><p>ChampionChallengerNotebook</p></td>
+<td><p>Content</p></td>
+<td><p>エイリアス管理ワークフロー</p></td>
+<td><p>9.1–9.5</p></td>
+<td><p>ModelRegistryIF (P0)</p></td>
+<td><p>Service</p></td>
+</tr>
+<tr class="row-odd"><td><p>JupyterBookConfig</p></td>
+<td><p>Config</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">_config.yml</span></code> / <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code> 構成</p></td>
+<td><p>5.1–5.5</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-even"><td><p>CICDWorkflow</p></td>
+<td><p>Infra</p></td>
+<td><p>GitHub Actions deploy.yml</p></td>
+<td><p>6.1–6.4</p></td>
+<td><p>JupyterBookConfig (P0)</p></td>
+<td><p>Batch</p></td>
+</tr>
+<tr class="row-odd"><td><p>EnvironmentConfig</p></td>
+<td><p>Config</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> / <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code></p></td>
+<td><p>7.1–7.6, 8.1</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-even"><td><p>FastAPIApp</p></td>
+<td><p>Service</p></td>
+<td><p>チャンピオンモデル推論 API</p></td>
+<td><p>10.1–10.6</p></td>
+<td><p>ModelRegistryIF (P0), MLflowServer (P0)</p></td>
+<td><p>API, Service</p></td>
+</tr>
+<tr class="row-odd"><td><p>ServerStartupGuide</p></td>
+<td><p>Doc</p></td>
+<td><p>2サーバー起動手順書</p></td>
+<td><p>11.1–11.5</p></td>
+<td><p>FastAPIApp (P0), MLflowServer (P0)</p></td>
+<td><p>—</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="content-layer">
+<h3>Content Layer<a class="headerlink" href="#content-layer" title="Permalink to this heading">#</a></h3>
+<section id="sklearnnotebook-pytorchnotebook-experimentnotebook">
+<h4>SklearnNotebook / PyTorchNotebook / ExperimentNotebook<a class="headerlink" href="#sklearnnotebook-pytorchnotebook-experimentnotebook" title="Permalink to this heading">#</a></h4>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Intent</p></td>
+<td><p>MLflow Tracking へのロギング・Model Registry 登録を実演するノートブック</p></td>
+</tr>
+<tr class="row-odd"><td><p>Requirements</p></td>
+<td><p>2.1–2.5, 3.1–3.4, 4.1–4.3, 8.1–8.6</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Responsibilities &amp; Constraints</strong></p>
+<ul class="simple">
+<li><p>すべてのデータセットを <code class="docutils literal notranslate"><span class="pre">sklearn.datasets</span></code> 内蔵データまたは <code class="docutils literal notranslate"><span class="pre">numpy</span></code> / <code class="docutils literal notranslate"><span class="pre">torch</span></code> による合成データで生成する（Req 8.1）</p></li>
+<li><p>実行時に外部ネットワーク接続を行わない（Req 8.3–8.4）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlflow.set_tracking_uri()</span></code> で Tracking URI を明示設定する。Phase 1 では <code class="docutils literal notranslate"><span class="pre">./mlruns</span></code>、Phase 2 では環境変数 <code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">torch.manual_seed()</span></code> を PyTorch ノートブックの先頭で設定し出力を再現可能にする</p></li>
+</ul>
+<p><strong>Dependencies</strong></p>
+<ul class="simple">
+<li><p>Inbound: Jupyter Kernel — ノートブック実行 (P0)</p></li>
+<li><p>Outbound: MLflow Tracking Server（Phase 1 はファイルシステム、Phase 2 はネットワーク）(P0)</p></li>
+<li><p>External: scikit-learn, PyTorch, numpy — データ生成・モデル定義 (P0)</p></li>
+</ul>
+<p><strong>Contracts</strong>: Service [x]</p>
+<section id="service-interface-mlflow-tracking">
+<h5>Service Interface（MLflow Tracking 呼び出しパターン）<a class="headerlink" href="#service-interface-mlflow-tracking" title="Permalink to this heading">#</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Phase 1: シングルマシン</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="s2">&quot;./mlruns&quot;</span><span class="p">)</span>
+
+<span class="c1"># Phase 2: ネットワーク接続（環境変数で切り替え）</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MLFLOW_TRACKING_URI&quot;</span><span class="p">])</span>
+
+<span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">(</span><span class="n">experiment_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="k">as</span> <span class="n">run</span><span class="p">:</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span><span class="n">sk_model</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">artifact_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">pytorch</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span><span class="n">pytorch_model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">artifact_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Preconditions: MLflow Tracking URI が到達可能であること</p></li>
+<li><p>Postconditions: <code class="docutils literal notranslate"><span class="pre">./mlruns</span></code>（または Server）に run, params, metrics, artifacts が記録されること</p></li>
+<li><p>Invariants: 各ノートブックの実行は外部インターネット接続なしで完了すること</p></li>
+</ul>
+<p><strong>Implementation Notes</strong></p>
+<ul class="simple">
+<li><p>Integration: 各ノートブックの先頭セルに <code class="docutils literal notranslate"><span class="pre">mlflow.set_tracking_uri</span></code> を記述し、Phase 切り替えは環境変数による1行変更で済む設計とする</p></li>
+<li><p>Validation: セル実行後に <code class="docutils literal notranslate"><span class="pre">mlflow.get_tracking_uri()</span></code> を表示し、接続先を確認できるようにする</p></li>
+<li><p>Risks: MLflow &lt; 2.8.0 環境では <code class="docutils literal notranslate"><span class="pre">set_registered_model_alias</span></code> が <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code> を発生させる。「はじめに」ページにバージョン確認コマンド（<code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">--version</span></code>）を記載する</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="experimentnotebook">
+<h4>ExperimentNotebook<a class="headerlink" href="#experimentnotebook" title="Permalink to this heading">#</a></h4>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Intent</p></td>
+<td><p>Optuna による体系的なハイパーパラメータ探索と MLflow Tracking を統合し、最良 trial のモデルを Model Registry に登録する</p></td>
+</tr>
+<tr class="row-odd"><td><p>Requirements</p></td>
+<td><p>4.1–4.6, 8.1–8.6</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Responsibilities &amp; Constraints</strong></p>
+<ul class="simple">
+<li><p>Optuna の <code class="docutils literal notranslate"><span class="pre">study.optimize()</span></code> のコールバック内で <code class="docutils literal notranslate"><span class="pre">mlflow.start_run()</span></code> を呼び出し、trial ごとに1 MLflow run を作成する</p></li>
+<li><p>データセットは <code class="docutils literal notranslate"><span class="pre">sklearn.datasets</span></code> 内蔵データを使用し、実行時の外部通信は行わない（Req 8.1）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TPESampler</span></code> を使用する（デフォルト。外部サービス不要）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">study.best_trial</span></code> から最良 run ID を特定し、<code class="docutils literal notranslate"><span class="pre">mlflow.register_model()</span></code> でモデルを登録する</p></li>
+</ul>
+<p><strong>Dependencies</strong></p>
+<ul class="simple">
+<li><p>Outbound: MLflow Tracking Server（Phase 1 はファイルシステム）(P0)</p></li>
+<li><p>External: Optuna（最新安定版）, scikit-learn (P0)</p></li>
+</ul>
+<p><strong>Contracts</strong>: Service [x]</p>
+<section id="service-interface-optuna-mlflow">
+<h5>Service Interface（Optuna + MLflow 統合パターン）<a class="headerlink" href="#service-interface-optuna-mlflow" title="Permalink to this heading">#</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">optuna</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mlflow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mlflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">MlflowClient</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="n">trial</span><span class="p">:</span> <span class="n">optuna</span><span class="o">.</span><span class="n">Trial</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="c1"># 探索空間の定義</span>
+    <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;max_depth&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s2">&quot;n_estimators&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">(</span><span class="n">nested</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="c1"># モデルトレーニング &amp; スコア計算</span>
+        <span class="n">score</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">train_and_evaluate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&quot;cv_score&quot;</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">score</span>  <span class="c1"># Optuna は最小化を前提（最大化する場合は direction=&quot;maximize&quot;）</span>
+
+<span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="s2">&quot;optuna_study&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">parent_run</span><span class="p">:</span>
+    <span class="n">study</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span>
+        <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;maximize&quot;</span><span class="p">,</span>
+        <span class="n">sampler</span><span class="o">=</span><span class="n">optuna</span><span class="o">.</span><span class="n">samplers</span><span class="o">.</span><span class="n">TPESampler</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+    <span class="c1"># ベスト trial の run ID を取得してモデル登録</span>
+    <span class="n">best_run_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">get_best_run_id</span><span class="p">(</span><span class="n">study</span><span class="p">,</span> <span class="n">parent_run</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">experiment_id</span><span class="p">)</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">register_model</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;runs:/</span><span class="si">{</span><span class="n">best_run_id</span><span class="si">}</span><span class="s2">/model&quot;</span><span class="p">,</span> <span class="s2">&quot;MyModel&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Preconditions: MLflow Tracking URI が設定済みであること</p></li>
+<li><p>Postconditions: <code class="docutils literal notranslate"><span class="pre">n_trials</span></code> 個の child run が記録され、ベストモデルが Model Registry に登録されること</p></li>
+<li><p>Invariants: 各 trial は独立した MLflow run として記録される（<code class="docutils literal notranslate"><span class="pre">nested=True</span></code>）</p></li>
+</ul>
+<p><strong>Implementation Notes</strong></p>
+<ul class="simple">
+<li><p>Integration: <code class="docutils literal notranslate"><span class="pre">parent_run</span></code> で study 全体を囲み、<code class="docutils literal notranslate"><span class="pre">nested=True</span></code> で各 trial を子 run として記録することで MLflow UI での階層表示を実現する</p></li>
+<li><p>Validation: <code class="docutils literal notranslate"><span class="pre">study.best_trial.value</span></code> と <code class="docutils literal notranslate"><span class="pre">mlflow.search_runs()</span></code> のスコアが一致することをノートブック末尾でアサートする</p></li>
+<li><p>Risks: trial 数が多い（&gt;100）と MLflow の run 数が増えてローカルディスクを圧迫する。チュートリアルでは <code class="docutils literal notranslate"><span class="pre">n_trials=30</span></code> 程度に抑える</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="championchallengernotebook">
+<h4>ChampionChallengerNotebook<a class="headerlink" href="#championchallengernotebook" title="Permalink to this heading">#</a></h4>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Intent</p></td>
+<td><p>MLflow エイリアス API を使ったチャンピオン/チャレンジャー管理ワークフローの実演</p></td>
+</tr>
+<tr class="row-odd"><td><p>Requirements</p></td>
+<td><p>9.1–9.5</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Responsibilities &amp; Constraints</strong></p>
+<ul class="simple">
+<li><p>MLflow 2.8.0 以降のエイリアス API のみを使用する（旧 Stages API は使用しない）</p></li>
+<li><p>チャレンジャーとチャンピオンのメトリクスをプログラム上で比較し、条件付きで昇格する</p></li>
+</ul>
+<p><strong>Dependencies</strong></p>
+<ul class="simple">
+<li><p>Outbound: MlflowClient — エイリアス操作 (P0)</p></li>
+<li><p>External: MLflow &gt;= 2.8.0 (P0)</p></li>
+</ul>
+<p><strong>Contracts</strong>: Service [x]</p>
+<section id="service-interface-modelregistry">
+<h5>Service Interface（ModelRegistry 操作）<a class="headerlink" href="#service-interface-modelregistry" title="Permalink to this heading">#</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mlflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">MlflowClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mlflow.entities.model_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelVersion</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">(</span><span class="n">tracking_uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span>
+
+<span class="c1"># エイリアス付与</span>
+<span class="n">client</span><span class="o">.</span><span class="n">set_registered_model_alias</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>      <span class="c1"># モデル名</span>
+    <span class="n">alias</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>     <span class="c1"># &quot;champion&quot; | &quot;challenger&quot; | &quot;archived&quot;</span>
+    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>    <span class="c1"># モデルバージョン番号（文字列）</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+
+<span class="c1"># エイリアスでバージョン取得</span>
+<span class="n">client</span><span class="o">.</span><span class="n">get_model_version_by_alias</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">alias</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelVersion</span>  <span class="c1"># .version, .run_id, .tags を含む</span>
+
+<span class="c1"># エイリアス削除（ロールバック時）</span>
+<span class="n">client</span><span class="o">.</span><span class="n">delete_registered_model_alias</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">alias</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+
+<span class="c1"># エイリアス URI でモデルをロード</span>
+<span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;models:/</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">@champion&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">PyFuncModel</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Preconditions: モデルが Model Registry に登録済みであること</p></li>
+<li><p>Postconditions: <code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアスが新バージョンを指すよう更新されること</p></li>
+<li><p>Invariants: 任意の時点で <code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアスは必ず1つのバージョンのみを指すこと</p></li>
+</ul>
+<p><strong>Implementation Notes</strong></p>
+<ul class="simple">
+<li><p>Integration: 昇格ロジックはノートブック内の Python 関数として実装する（外部スクリプト化は非スコープ）</p></li>
+<li><p>Validation: <code class="docutils literal notranslate"><span class="pre">get_model_version_by_alias</span></code> で昇格後のエイリアスを確認するアサーション例を含める</p></li>
+<li><p>Risks: <code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> が未設定の状態でロードしようとすると <code class="docutils literal notranslate"><span class="pre">MlflowException</span></code> が発生。初回登録フローとして例外ハンドリング例を示す</p></li>
+</ul>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="service-layer">
+<h3>Service Layer<a class="headerlink" href="#service-layer" title="Permalink to this heading">#</a></h3>
+<section id="fastapiapp">
+<h4>FastAPIApp<a class="headerlink" href="#fastapiapp" title="Permalink to this heading">#</a></h4>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Intent</p></td>
+<td><p>MLflow Model Registry のチャンピオンモデルを起動時にロードし、推論エンドポイントを提供する</p></td>
+</tr>
+<tr class="row-odd"><td><p>Requirements</p></td>
+<td><p>10.1–10.6, 11.4–11.5</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Responsibilities &amp; Constraints</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI</span></code> 環境変数で MLflow Server の接続先を設定する</p></li>
+<li><p>lifespan コンテキストマネージャーで起動時に <code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> モデルをロードし <code class="docutils literal notranslate"><span class="pre">app.state</span></code> に保持する</p></li>
+<li><p>起動失敗（MLflow Server 未起動・モデル未登録）時は明確なエラーを出力してプロセスを終了する</p></li>
+<li><p>FastAPI アプリは MLflow Server とは別プロセスで起動する</p></li>
+</ul>
+<p><strong>Dependencies</strong></p>
+<ul class="simple">
+<li><p>Inbound: HTTP クライアント（curl / Python requests）— 推論リクエスト (P1)</p></li>
+<li><p>Outbound: MLflow Tracking Server — モデルロード (<code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI</span></code>) (P0)</p></li>
+<li><p>External: FastAPI, uvicorn, Pydantic v2, MLflow &gt;= 2.8.0 (P0)</p></li>
+</ul>
+<p><strong>Contracts</strong>: API [x], Service [x]</p>
+<section id="api-contract">
+<h5>API Contract<a class="headerlink" href="#api-contract" title="Permalink to this heading">#</a></h5>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Endpoint</p></th>
+<th class="head"><p>Request</p></th>
+<th class="head"><p>Response</p></th>
+<th class="head"><p>Errors</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>GET</p></td>
+<td><p>/health</p></td>
+<td><p>—</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">HealthResponse</span></code></p></td>
+<td><p>503 MLflow 未接続</p></td>
+</tr>
+<tr class="row-odd"><td><p>POST</p></td>
+<td><p>/predict</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PredictRequest</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PredictResponse</span></code></p></td>
+<td><p>422 バリデーションエラー, 500 推論失敗</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="service-interface">
+<h5>Service Interface<a class="headerlink" href="#service-interface" title="Permalink to this heading">#</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">asynccontextmanager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PredictRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PredictResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">prediction</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">model_version</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">alias</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">HealthResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>          <span class="c1"># &quot;ok&quot; | &quot;error&quot;</span>
+    <span class="n">tracking_uri</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">model_version</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@asynccontextmanager</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">lifespan</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">FastAPI</span><span class="p">):</span>
+    <span class="c1"># 起動時: champion モデルをロード</span>
+    <span class="n">tracking_uri</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MLFLOW_TRACKING_URI&quot;</span><span class="p">]</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MODEL_NAME&quot;</span><span class="p">]</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="n">tracking_uri</span><span class="p">)</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">()</span>
+    <span class="n">mv</span><span class="p">:</span> <span class="n">ModelVersion</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_model_version_by_alias</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="s2">&quot;champion&quot;</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;models:/</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">@champion&quot;</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">model_version</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">version</span>
+    <span class="k">yield</span>
+    <span class="c1"># シャットダウン時: クリーンアップ（必要に応じて）</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">lifespan</span><span class="o">=</span><span class="n">lifespan</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/predict&quot;</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">PredictResponse</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">req</span><span class="p">:</span> <span class="n">PredictRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PredictResponse</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">model</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">features</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># model.predict() は同期 API のため asyncio.to_thread で実行してイベントループをブロックしない</span>
+    <span class="n">prediction</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">,</span> <span class="n">features</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">PredictResponse</span><span class="p">(</span>
+        <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+        <span class="n">model_name</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MODEL_NAME&quot;</span><span class="p">],</span>
+        <span class="n">model_version</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">model_version</span><span class="p">,</span>
+        <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;champion&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Preconditions: <code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI</span></code> と <code class="docutils literal notranslate"><span class="pre">MODEL_NAME</span></code> 環境変数が設定されていること、<code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアスが存在すること</p></li>
+<li><p>Postconditions: <code class="docutils literal notranslate"><span class="pre">/predict</span></code> が <code class="docutils literal notranslate"><span class="pre">PredictResponse</span></code> を返すこと</p></li>
+<li><p>Invariants: <code class="docutils literal notranslate"><span class="pre">app.state.model</span></code> は lifespan 期間中にのみ有効であること</p></li>
+</ul>
+<p><strong>Implementation Notes</strong></p>
+<ul class="simple">
+<li><p>Integration: <code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI=http://localhost:5000</span> <span class="pre">MODEL_NAME=MyModel</span> <span class="pre">uvicorn</span> <span class="pre">app.main:app</span> <span class="pre">--port</span> <span class="pre">8000</span></code> で起動</p></li>
+<li><p>Validation: <code class="docutils literal notranslate"><span class="pre">/health</span></code> エンドポイントで MLflow 接続状態とモデルバージョンを返し、ヘルスチェックに使用する</p></li>
+<li><p>Risks: MLflow Python クライアントは同期 API のみ提供。<code class="docutils literal notranslate"><span class="pre">/predict</span></code> ハンドラー内で <code class="docutils literal notranslate"><span class="pre">model.predict()</span></code> を呼ぶ際は <code class="docutils literal notranslate"><span class="pre">asyncio.to_thread()</span></code> を使って非同期コンテキストをブロックしない</p></li>
+</ul>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="config-layer">
+<h3>Config Layer<a class="headerlink" href="#config-layer" title="Permalink to this heading">#</a></h3>
+<section id="jupyterbookconfig">
+<h4>JupyterBookConfig<a class="headerlink" href="#jupyterbookconfig" title="Permalink to this heading">#</a></h4>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Intent</p></td>
+<td><p>Jupyter Book 0.15.x でビルド可能な設定ファイルと目次を定義する</p></td>
+</tr>
+<tr class="row-odd"><td><p>Requirements</p></td>
+<td><p>5.1–5.5</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Contracts</strong>: State [x]</p>
+<section id="state-management">
+<h5>State Management<a class="headerlink" href="#state-management" title="Permalink to this heading">#</a></h5>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># _config.yml（主要設定のみ）</span>
+<span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MLflow Tutorial</span>
+<span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="nt">execute</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">execute_notebooks</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;off&quot;</span><span class="w">   </span><span class="c1"># Req 6.2: CI でノートブックを再実行しない</span>
+<span class="nt">parse</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">myst_enable_extensions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;colon_fence&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># _toc.yml（目次構造）</span>
+<span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jb-book</span>
+<span class="nt">root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">intro</span>
+<span class="nt">chapters</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notebooks/01_concepts/mlflow_overview</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notebooks/02_sklearn/sklearn_autolog</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notebooks/02_sklearn/sklearn_manual</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notebooks/03_pytorch/pytorch_tracking</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notebooks/04_experiment_management/hyperparam_search</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notebooks/05_champion_challenger/champion_challenger</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notebooks/06_deployment/fastapi_serving</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>State model: ビルド設定はファイルシステム上の静的 YAML。ランタイム状態なし</p></li>
+<li><p>Persistence: リポジトリにコミットされ CI で読み込まれる</p></li>
+<li><p>Concurrency: 単一ビルドプロセスのみ</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="cicdworkflow">
+<h4>CICDWorkflow<a class="headerlink" href="#cicdworkflow" title="Permalink to this heading">#</a></h4>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Intent</p></td>
+<td><p>mainブランチ push 時に Jupyter Book をビルドし gh-pages へデプロイする</p></td>
+</tr>
+<tr class="row-odd"><td><p>Requirements</p></td>
+<td><p>6.1–6.4</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Contracts</strong>: Batch [x]</p>
+<section id="batch-job-contract">
+<h5>Batch / Job Contract<a class="headerlink" href="#batch-job-contract" title="Permalink to this heading">#</a></h5>
+<ul class="simple">
+<li><p><strong>Trigger</strong>: <code class="docutils literal notranslate"><span class="pre">push</span></code> to <code class="docutils literal notranslate"><span class="pre">main</span></code> branch</p></li>
+<li><p><strong>Input / validation</strong>: リポジトリのノートブック（<code class="docutils literal notranslate"><span class="pre">.ipynb</span></code>）とビルド設定（<code class="docutils literal notranslate"><span class="pre">_config.yml</span></code>, <code class="docutils literal notranslate"><span class="pre">_toc.yml</span></code>）</p></li>
+<li><p><strong>Output / destination</strong>: <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> ブランチ（<code class="docutils literal notranslate"><span class="pre">_build/html/</span></code> の内容）</p></li>
+<li><p><strong>Idempotency &amp; recovery</strong>: 同一コミットの再 push でも同一ビルド結果が得られる。ビルド失敗時は Actions ログで各ステップを個別に確認可能（Req 6.4）</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># .github/workflows/deploy.yml（構造定義）</span>
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install -r requirements.txt</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build Jupyter Book</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jupyter-book build .</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to GitHub Pages</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">peaceiris/actions-gh-pages@v3</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">github_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
+<span class="w">          </span><span class="nt">publish_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./_build/html</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="environmentconfig">
+<h4>EnvironmentConfig<a class="headerlink" href="#environmentconfig" title="Permalink to this heading">#</a></h4>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Intent</p></td>
+<td><p>conda 仮想環境定義とオフラインインストール手順を提供する</p></td>
+</tr>
+<tr class="row-odd"><td><p>Requirements</p></td>
+<td><p>7.1–7.6, 8.1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Contracts</strong>: State [x]</p>
+<section id="id2">
+<h5>State Management<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h5>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># environment.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlflow-tutorial</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python=3.11</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pip</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlflow&gt;=2.8.0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scikit-learn</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">torch</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optuna</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fastapi</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uvicorn</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jupyter-book&gt;=0.15,&lt;1.0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pydantic&gt;=2.0</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>オンライン環境</strong>: <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">env</span> <span class="pre">create</span> <span class="pre">-f</span> <span class="pre">environment.yml</span></code></p></li>
+<li><p><strong>オフライン環境（pip wheel 方式）</strong>: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">download</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span> <span class="pre">-d</span> <span class="pre">./wheels</span></code> → <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--no-index</span> <span class="pre">--find-links=./wheels</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code></p></li>
+<li><p><strong>オフライン環境（conda channel 方式）</strong>: <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">index</span> <span class="pre">./local-channel</span></code> → <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">file:///path/to/local-channel</span> <span class="pre">パッケージ名</span></code></p></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="data-models">
+<h2>Data Models<a class="headerlink" href="#data-models" title="Permalink to this heading">#</a></h2>
+<section id="domain-model">
+<h3>Domain Model<a class="headerlink" href="#domain-model" title="Permalink to this heading">#</a></h3>
+<p>本プロジェクトにおけるドメインエンティティは MLflow が管理する以下のオブジェクトである。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Experiment
+  └── Run (1..*)
+        ├── params: dict[str, str]
+        ├── metrics: dict[str, list[float]]
+        └── artifacts: list[ArtifactPath]
+
+RegisteredModel
+  └── ModelVersion (1..*)
+        ├── version: str
+        ├── run_id: str
+        └── aliases: list[str]   # &quot;champion&quot; | &quot;challenger&quot; | &quot;archived&quot;
+</pre></div>
+</div>
+<p><strong>Business Rules</strong>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアスはゼロまたは1つの ModelVersion のみを指す</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;challenger</span></code> エイリアスは昇格フロー中にのみ存在する</p></li>
+<li><p>エイリアス昇格は <code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> の切り替えと <code class="docutils literal notranslate"><span class="pre">&#64;archived</span></code> への旧バージョン移動をアトミックに（連続して）行う</p></li>
+</ul>
+</section>
+<section id="data-contracts-integration">
+<h3>Data Contracts &amp; Integration<a class="headerlink" href="#data-contracts-integration" title="Permalink to this heading">#</a></h3>
+<p><strong>FastAPI リクエスト/レスポンス</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># POST /predict</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PredictRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>  <span class="c1"># モデルの入力特徴量</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PredictResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">prediction</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>  <span class="c1"># モデルの出力（分類の場合は class index を float で返す）</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">model_version</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">alias</span><span class="p">:</span> <span class="nb">str</span>              <span class="c1"># 常に &quot;champion&quot;</span>
+
+<span class="c1"># GET /health</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HealthResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>             <span class="c1"># &quot;ok&quot; | &quot;error&quot;</span>
+    <span class="n">tracking_uri</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">model_version</span><span class="p">:</span> <span class="nb">str</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this heading">#</a></h2>
+<section id="error-strategy">
+<h3>Error Strategy<a class="headerlink" href="#error-strategy" title="Permalink to this heading">#</a></h3>
+<p>ユーザー操作エラー（設定ミス）は起動時に早期検出して明確なメッセージを出力する。推論エラーはハンドラー内でキャッチし JSON レスポンスとして返す。</p>
+</section>
+<section id="error-categories-and-responses">
+<h3>Error Categories and Responses<a class="headerlink" href="#error-categories-and-responses" title="Permalink to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>エラー種別</p></th>
+<th class="head"><p>発生箇所</p></th>
+<th class="head"><p>対応</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI</span></code> 未設定</p></td>
+<td><p>FastAPI lifespan</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">KeyError</span></code> → 起動失敗、環境変数名を標準出力に表示</p></td>
+</tr>
+<tr class="row-odd"><td><p>MLflow Server 未起動</p></td>
+<td><p>FastAPI lifespan</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MlflowException:</span> <span class="pre">Connection</span> <span class="pre">refused</span></code> → 起動失敗、接続先 URI を表示</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&#64;champion</span></code> エイリアス未存在</p></td>
+<td><p>FastAPI lifespan</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MlflowException</span></code> → 起動失敗、モデル登録手順を案内</p></td>
+</tr>
+<tr class="row-odd"><td><p>MLflow バージョン &lt; 2.8.0</p></td>
+<td><p>ノートブック実行時</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">AttributeError:</span> <span class="pre">set_registered_model_alias</span></code> → 「はじめに」ページのバージョン確認手順を参照</p></td>
+</tr>
+<tr class="row-even"><td><p>推論入力の型不正</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/predict</span></code></p></td>
+<td><p>Pydantic <code class="docutils literal notranslate"><span class="pre">ValidationError</span></code> → HTTP 422 + フィールドエラー詳細</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> / <code class="docutils literal notranslate"><span class="pre">torch</span></code> シードなし</p></td>
+<td><p>ノートブック</p></td>
+<td><p>出力が実行ごとに変わる → 各ノートブック先頭で <code class="docutils literal notranslate"><span class="pre">np.random.seed()</span></code> / <code class="docutils literal notranslate"><span class="pre">torch.manual_seed()</span></code> を設定</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="monitoring">
+<h3>Monitoring<a class="headerlink" href="#monitoring" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>FastAPI: uvicorn のアクセスログ（標準出力）で <code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/predict</span></code> のリクエスト数を確認</p></li>
+<li><p>MLflow UI（<code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">ui</span></code> / <code class="docutils literal notranslate"><span class="pre">mlflow</span> <span class="pre">server</span></code>）で Run・メトリクス・モデルバージョンを可視化</p></li>
+<li><p>チュートリアル目的のため、外部モニタリングサービスは使用しない</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="testing-strategy">
+<h2>Testing Strategy<a class="headerlink" href="#testing-strategy" title="Permalink to this heading">#</a></h2>
+<p>チュートリアルコンテンツの品質検証は以下の方法で行う。</p>
+<section id="id3">
+<h3>ノートブック動作検証<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>ローカルで <code class="docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">nbconvert</span> <span class="pre">--to</span> <span class="pre">notebook</span> <span class="pre">--execute</span></code> を使って各ノートブックがエラーなく実行完了することを確認する</p></li>
+<li><p>検証時は conda 仮想環境 <code class="docutils literal notranslate"><span class="pre">mlflow-tutorial</span></code> をアクティベートした状態で実行する</p></li>
+<li><p>検証対象: sklearn ノートブック・PyTorch ノートブック・実験比較ノートブック・チャンピオン/チャレンジャーノートブック（各 1 ノートブック）</p></li>
+</ul>
+</section>
+<section id="jupyter-book">
+<h3>Jupyter Book ビルド検証<a class="headerlink" href="#jupyter-book" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">jupyter-book</span> <span class="pre">build</span> <span class="pre">.</span></code> がゼロエラーで完了すること</p></li>
+<li><p>生成された <code class="docutils literal notranslate"><span class="pre">_build/html/index.html</span></code> をブラウザで開き、TOC と各ページが正しくレンダリングされることを目視確認する</p></li>
+</ul>
+</section>
+<section id="fastapi">
+<h3>FastAPI エンドポイント検証<a class="headerlink" href="#fastapi" title="Permalink to this heading">#</a></h3>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/health</span></code> が <code class="docutils literal notranslate"><span class="pre">{&quot;status&quot;:</span> <span class="pre">&quot;ok&quot;,</span> <span class="pre">...}</span></code> を返すこと</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/predict</span></code> に有効な <code class="docutils literal notranslate"><span class="pre">features</span></code> リストを送信して <code class="docutils literal notranslate"><span class="pre">prediction</span></code> を含む JSON が返ること</p></li>
+<li><p>検証コマンド例:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/predict<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;features&quot;: [5.1, 3.5, 1.4, 0.2]}&#39;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="id4">
+<h3>オフライン動作検証<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>conda 仮想環境をアクティベートした状態でネットワークを切断（または <code class="docutils literal notranslate"><span class="pre">--proxy</span> <span class="pre">none</span></code> 相当）してノートブックを実行し、全セルが正常完了することを確認する</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="security-considerations">
+<h2>Security Considerations<a class="headerlink" href="#security-considerations" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>FastAPI は外部インターネット非公開の内部ネットワークで運用することを前提とする。認証・TLS は非スコープ</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MLFLOW_TRACKING_URI</span></code>・<code class="docutils literal notranslate"><span class="pre">MODEL_NAME</span></code> は環境変数で設定する。ハードコーディング禁止</p></li>
+<li><p>MLflow アーティファクトはローカルファイルシステムに保存されるため、ファイルシステムのアクセス権でアクセス制御する</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="supporting-references">
+<h2>Supporting References<a class="headerlink" href="#supporting-references" title="Permalink to this heading">#</a></h2>
+<p>詳細な調査ログ・バージョン選定の経緯・設計決定の根拠は <a class="reference internal" href="research.html"><span class="doc std std-doc">research.md</span></a> を参照。</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./.kiro/specs/mlflow-tutorial"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-goals">Non-Goals</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-pattern-boundary-map">Architecture Pattern &amp; Boundary Map</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technology-stack">Technology Stack</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#system-flows">System Flows</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flow-1-phase-1">Flow 1: ノートブック学習フロー（Phase 1）</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flow-2-req-9">Flow 2: チャンピオン/チャレンジャー昇格フロー（Req 9）</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flow-3-fastapi-req-1011">Flow 3: FastAPI 起動・推論フロー（Req 10・11）</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-traceability">Requirements Traceability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#components-and-interfaces">Components and Interfaces</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">コンポーネント一覧</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#content-layer">Content Layer</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sklearnnotebook-pytorchnotebook-experimentnotebook">SklearnNotebook / PyTorchNotebook / ExperimentNotebook</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#service-interface-mlflow-tracking">Service Interface（MLflow Tracking 呼び出しパターン）</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#experimentnotebook">ExperimentNotebook</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#service-interface-optuna-mlflow">Service Interface（Optuna + MLflow 統合パターン）</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#championchallengernotebook">ChampionChallengerNotebook</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#service-interface-modelregistry">Service Interface（ModelRegistry 操作）</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#service-layer">Service Layer</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fastapiapp">FastAPIApp</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#api-contract">API Contract</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#service-interface">Service Interface</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#config-layer">Config Layer</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyterbookconfig">JupyterBookConfig</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#state-management">State Management</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cicdworkflow">CICDWorkflow</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-job-contract">Batch / Job Contract</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#environmentconfig">EnvironmentConfig</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">State Management</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-models">Data Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-model">Domain Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-contracts-integration">Data Contracts &amp; Integration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-handling">Error Handling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-strategy">Error Strategy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-categories-and-responses">Error Categories and Responses</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring">Monitoring</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-strategy">Testing Strategy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">ノートブック動作検証</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter-book">Jupyter Book ビルド検証</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fastapi">FastAPI エンドポイント検証</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">オフライン動作検証</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-considerations">Security Considerations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supporting-references">Supporting References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
